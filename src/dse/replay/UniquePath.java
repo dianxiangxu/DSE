@@ -26,12 +26,13 @@ public class UniquePath {
     public boolean hasSolution = false;
     public boolean validPath = false;
     public boolean visited = false;
-    
+    public String inputAsString = "";
     
     
     public UniquePath(){
         path = new Vector<ConditionStatement>();  
         noOfConditions = 0;
+        inputAsString = "";
     }
     
     public void addACondition( ConditionStatement condition) {
@@ -44,6 +45,16 @@ public class UniquePath {
     public void setModel(Model m)
     {
         this.model = m;
+    }
+    
+    public void storeInputAsString(String str)
+    {
+        this.inputAsString = str;
+    }
+    
+    public String getInputAsString()
+    {
+        return this.inputAsString;
     }
     
     public String getIdentityString()

@@ -18,6 +18,7 @@ class InvokeManager
     Invoker invoker = null;
     private UniquePath uniquePath = null;
     
+    
     public InvokeManager()
     {
         invoker = new Invoker();
@@ -84,8 +85,8 @@ class InvokeManager
         Vector<String> vector = new Vector<String>();
         if(model == null)
         {
-            vector.add(Integer.toString(6));
-            vector.add(Integer.toString(21));
+            vector.add(Integer.toString(rand.nextInt(100)));
+            vector.add(Integer.toString(rand.nextInt(100)));
         }
         else
         {
@@ -130,6 +131,7 @@ class InvokeManager
         System.out.println("INPUT:"+vector);
         invoker.invoke(arr);                
         processFileAndCreateModel();
+        this.uniquePath.storeInputAsString(vector.toString());
     }
     
    

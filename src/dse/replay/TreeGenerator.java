@@ -9,10 +9,14 @@ import com.microsoft.z3.Model;
 import dse.nazmul.ConditionStatement;
 import dse.replay.structure.ListStack;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -22,18 +26,18 @@ class TreeGenerator
     TreeNode tree = null;
     HashMap<String,TreeNode> conditionTracer = null;
     TreeNode root =null;
-    TreeNode currentTreeNode =null;
-    
+    TreeNode currentTreeNode =null;    
     ListStack nodeStack = null;
+    
+    String textAreaOutput = "";
     
     public TreeGenerator()
     {
         invokeManager = new InvokeManager();
         conditionTracer = new HashMap<>();
-        //tree = new TreeNode();
         root = new TreeNode();
         nodeStack = new ListStack();
-        //currentTreeNode = root;
+        textAreaOutput = "";
     }
     
    
@@ -53,6 +57,7 @@ class TreeGenerator
         showTree();
     }
     
+    int width = 500;
     private void showTree()
     {
         JFrame frame = new JFrame("Condition Tree");
@@ -62,10 +67,30 @@ class TreeGenerator
         
         JTree tree = new JTree(mroot);
         JScrollPane scrollPane = new JScrollPane(tree);
-        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-        frame.setSize(300, 150);
+        
+        
+        scrollPane.setPreferredSize(new Dimension(width,200));
+        
+        JPanel motherPanel =  new JPanel();
+        motherPanel.setPreferredSize(new Dimension(width,500));
+        motherPanel.setLayout(new BorderLayout(5, 10));
+        motherPanel.add(scrollPane, BorderLayout.NORTH);
+        motherPanel.add(getOutputPanel(),BorderLayout.SOUTH);
+        frame.getContentPane().add(motherPanel);
+        frame.setSize(width,600 );
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    
+    private JPanel getOutputPanel()
+    {
+        JPanel outputPanel = new JPanel();
+        outputPanel.setPreferredSize(new Dimension(width, 360));
+        outputPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
+        outputPanel.add(new JTextArea(textAreaOutput,27, 45));
+        
+        return outputPanel;
     }
     
     public void traverseTree(TreeNode tree,DefaultMutableTreeNode node) {
@@ -159,6 +184,9 @@ class TreeGenerator
                }
             }
         }
+        
+        System.out.println("ADDING To OUTPUT:"+uniquePath.descriptionString + "::"+ uniquePath.inputAsString + "\n");
+        textAreaOutput += uniquePath.descriptionString + "::"+ uniquePath.inputAsString + "\n";
         return nextNode;
 
     }
@@ -239,21 +267,24 @@ class TreeGenerator
             {
                 nodeStack.pop();
             }
-            
-            if(!node.falseChecked)
+            else
             {
-                // check false
-                System.out.println("FALSE not checked");
-                negateAndCall(node);                
-                node.falseChecked = true;
-            }
             
-            if(!node.trueChecked)
-            {
-                // check true
-                System.out.println("TRUE not checked");
-                negateAndCall(node);
-                node.trueChecked = true;
+                if(!node.falseChecked)
+                {
+                    // check false
+                    System.out.println("FALSE not checked");
+                    negateAndCall(node);                
+                    node.falseChecked = true;
+                }
+
+                if(!node.trueChecked)
+                {
+                    // check true
+                    System.out.println("TRUE not checked");
+                    negateAndCall(node);
+                    node.trueChecked = true;
+                }
             }
         loopCounter++; 
         }
@@ -262,8 +293,8 @@ class TreeGenerator
     
     public void negateAndCall(TreeNode node)
     {
-        Model model = createModel(node);
-        invokeFromModel(model, node);
+        createModel(node);
+        
         
     }
     
@@ -272,12 +303,14 @@ class TreeGenerator
         invokeManager.invokeFromModel(model);
         UniquePath uniquePath = invokeManager.getUniquePath();
         System.out.println("After Invoke:"+uniquePath.getDescriptionString());
+        System.out.println("IS NODE NULL:"+currentNode.getCondition());
         addToTree(currentNode,uniquePath);  //not first time
     }
     
-    public Model createModel(TreeNode node)
+    public void createModel(TreeNode node)
     {
         UniquePath up = new UniquePath();
+        TreeNode currentNodeHolder = node;
         ConditionStatement negationCondition = ((ConditionStatement)(node.getCondition())).returnNegateCondition();
         up.addACondition(negationCondition);
         boolean causeOfBirth = node.causeOfBirth;
@@ -295,7 +328,16 @@ class TreeGenerator
         System.out.println("UP for model:"+up.getDescriptionString());
         new ExpressionBuilder().parseAndBuildExpression(up);
         
-        return up.model;
+        if(up.hasSolution)
+        {    
+           invokeFromModel(up.model, currentNodeHolder);
+        }
+        else
+        {
+            System.out.println("ADDING To OUTPUT:"+up.descriptionString + "::"+ "Not feasible" + "\n");
+            textAreaOutput += up.descriptionString + "::"+ "Not feasible" + "\n";
+        
+        }
     }
     
     public void preOrderRecursivePrint(TreeNode root) {

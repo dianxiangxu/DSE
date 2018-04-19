@@ -203,7 +203,7 @@ public class ConditionStatement {
     
     public String getDescriptionString()
     {
-        return "(line:"+this.lineNo+")"+this.leftHand+this.operand+this.rightHand+this.booleanValue;
+        return "("+this.lineNo+") "+this.leftHand+this.operand+this.rightHand+" ";
     }
     public String getAlternativeDescriptionString()
     {
