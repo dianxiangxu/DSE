@@ -66,8 +66,9 @@ class TreeGenerator
         traverseTree(root,mroot);
         
         JTree tree = new JTree(mroot);
+       
         JScrollPane scrollPane = new JScrollPane(tree);
-        
+        expandAllNodes(tree);
         
         scrollPane.setPreferredSize(new Dimension(width,200));
         
@@ -91,6 +92,16 @@ class TreeGenerator
         outputPanel.add(new JTextArea(textAreaOutput,27, 45));
         
         return outputPanel;
+    }
+    
+    private void expandAllNodes(JTree tree) {
+        int j = tree.getRowCount();
+        int i = 0;
+        while (i < j) {
+            tree.expandRow(i);
+            i += 1;
+            j = tree.getRowCount();
+        }
     }
     
     public void traverseTree(TreeNode tree,DefaultMutableTreeNode node) {
@@ -325,6 +336,7 @@ class TreeGenerator
             causeOfBirth = node.causeOfBirth;
             node = node.getParent();
         }
+        up.reversePath();
         System.out.println("UP for model:"+up.getDescriptionString());
         new ExpressionBuilder().parseAndBuildExpression(up);
         

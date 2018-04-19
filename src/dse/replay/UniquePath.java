@@ -7,6 +7,7 @@ package dse.replay;
 import com.microsoft.z3.*;
 import dse.nazmul.ConditionStatement;
 import dse.nazmul.SootIntCollectorInstra;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,6 +42,19 @@ public class UniquePath {
         indentityString += condition.toString();
         descriptionString += condition.getDescriptionString();
     }
+    
+    public void reversePath()
+    {
+        Collections.reverse(path);
+        indentityString = "";
+        descriptionString = "";
+        for(int i=0;i<path.size();i++)
+        {
+            indentityString += path.get(i).toString();
+            descriptionString += path.get(i).getDescriptionString();
+        }
+    }
+    
     
     public void setModel(Model m)
     {
