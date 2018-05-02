@@ -14,11 +14,12 @@ import java.util.TreeMap;
  * The Java Virtual Machine allows an application to have multiple threads of execution running concurrently.
  */
 public class ShutdownInstra extends Thread {
-	
+	public static String tempFile = "temp.txt";
+        public static String outputFile = "output.txt";
 	public void run(){
 		System.out.println("Shutdown hook called");
-		File out = new File("C:\\applications\\temp.txt");
-		File out2 = new File("C:\\applications\\output.txt");
+		File out = new File(tempFile);
+		File out2 = new File(outputFile);
 		try{
 			FileWriter fw = new FileWriter(out,true);
 			FileWriter fw2 = new FileWriter(out2,true);
@@ -59,8 +60,8 @@ public class ShutdownInstra extends Thread {
 	
         public void doJob(){
 		System.out.println("Shutdown hook doJob called");
-		File out = new File("C:\\applications\\temp.txt");
-		File out2 = new File("C:\\applications\\output.txt");
+		File out = new File(tempFile);
+		File out2 = new File(outputFile);
 		try{
 			FileWriter fw = new FileWriter(out,true);
 			FileWriter fw2 = new FileWriter(out2,true);

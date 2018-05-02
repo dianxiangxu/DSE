@@ -18,6 +18,7 @@ public class MainCaller {
 //        p.doAlltask();
         TreeGenerator treeGenerator = new TreeGenerator();
         treeGenerator.invokeFirstTime();
+       // new InvokeManager().testInvoke();
     }
     
 }

@@ -193,7 +193,7 @@ public class ConditionStatement {
     }
     public String printValue()
     {
-        return this.lineNo+" "+this.leftHand+this.operand+this.rightHand;
+        return this.leftHand+this.operand+this.rightHand+" ("+this.lineNo+") ";
     }
     
     public String toAlternativeString()
@@ -203,7 +203,7 @@ public class ConditionStatement {
     
     public String getDescriptionString()
     {
-        return "("+this.lineNo+") "+this.leftHand+this.operand+this.rightHand+" ";
+        return "("+this.lineNo+") "+this.leftHand+this.operand+this.rightHand;
     }
     public String getAlternativeDescriptionString()
     {

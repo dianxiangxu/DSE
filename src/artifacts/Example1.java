@@ -329,12 +329,93 @@ public class Example1 {
         z = x1 + y1;
         return z;
     }
+     static int example_17(int x1, int y1, int z1) {
+         
+        int x = x1;
+        int y = y1;
+        int z = z1;
+        
+        if (x1 > 0 ) 
+        {
+            x = x + 3;
+            
+            if(y1 > 2)
+            {
+                x = x+y;
+                
+                if(z1>15)
+                {
+                    y = y+2;
+                }
+                else
+                {
+                    y = y -1;
+                }
+            }
+            else
+            {
+                if(z1>20)
+                {
+                    y = y+2;
+                }
+                else
+                {
+                    y = y -1;
+                }
+            }
+            
+        }
+        else
+        {
+            x = x + 3;
+            
+            if(y1 > 6)
+            {
+                x = x+y;
+                
+                if(z1>25)
+                {
+                    y = y+2;
+                }
+                else
+                {
+                    y = y -1;
+                }
+            }
+            else
+            {
+                if(z1>3)
+                {
+                    y = y+2;
+                }
+                else
+                {
+                    y = y -1;
+                }
+            }
+        }
+        z = x + y +z ;
+        return z;
+    }
+     
+     public static int noOfArguments = 3;
 	public static void main(String[] args){
-		int x = Integer.valueOf(args[0]);
-		int y = Integer.valueOf(args[1]);
-		//int z = Integer.valueOf(args[2]);
-		System.out.println(example_13(x,y));
-                //dse.nazmul.SootIntCollectorInstra.conditionSaver.clear();
+//                if(noOfArguments == 2)
+//                {
+//                    int x = Integer.valueOf(args[0]);
+//		    int y = Integer.valueOf(args[1]);
+//		    System.out.println(example_13(x,y));
+//                }
+//                else if(noOfArguments == 3)
+//                {
+                    int x = Integer.valueOf(args[0]);
+		    int y = Integer.valueOf(args[1]);
+		    int z = Integer.valueOf(args[2]);
+		    System.out.println(example_17(x,y,z));
+//                }
+                
+                
+		//dse.nazmul.SootIntCollectorInstra.conditionSaver.clear();
 	}
 
 }

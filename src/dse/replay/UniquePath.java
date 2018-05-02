@@ -40,7 +40,7 @@ public class UniquePath {
         path.add(condition);
         noOfConditions = path.size();
         indentityString += condition.toString();
-        descriptionString += condition.getDescriptionString();
+        descriptionString += condition.getDescriptionString()+", ";
     }
     
     public void reversePath()
@@ -51,7 +51,7 @@ public class UniquePath {
         for(int i=0;i<path.size();i++)
         {
             indentityString += path.get(i).toString();
-            descriptionString += path.get(i).getDescriptionString();
+            descriptionString += path.get(i).getDescriptionString()+", ";
         }
     }
     

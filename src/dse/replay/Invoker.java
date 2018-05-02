@@ -5,8 +5,12 @@
  */
 package dse.replay;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  *
@@ -14,11 +18,19 @@ import java.lang.reflect.Method;
  */
 public class Invoker {
 
-    public void invoke(String[] arr) {
+    public void invoke(String[] arr) throws MalformedURLException {
         Class[] argTypes = new Class[1];
         argTypes[0] = String[].class;
         try {
-            Method mainMethod = Class.forName("artifacts.Example1").getDeclaredMethod("main", argTypes);
+            String absPath = "C:/Users/Md Nazmul Karim/Documents/NetBeansProjects/MutationTestApp/sootOutput";
+           
+            File f = new File(absPath);
+            URL[] cp = {f.toURI().toURL()};
+            URLClassLoader urlcl = new URLClassLoader(cp);
+            Class clazz = urlcl.loadClass("artifacts.Example1");
+            
+            
+            Method mainMethod = clazz.getDeclaredMethod("main", argTypes);
             Object[] argListForInvokedMain = new Object[1];
             argListForInvokedMain[0] = arr;
 

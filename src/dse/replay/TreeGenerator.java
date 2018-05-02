@@ -50,8 +50,7 @@ class TreeGenerator
         preOrderRecursivePrint(root);
         System.out.println("####################");
         
-        stepAndExplore();
-        
+        stepAndExplore();        
         preOrderRecursivePrint(root);
         
         showTree();
@@ -115,14 +114,25 @@ class TreeGenerator
             if(tree.getTrueChildren() != null)
             {
                 TreeNode trueChild = tree.getTrueChildren();
-                DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(((ConditionStatement)trueChild.getCondition()).printValue());
+                String tag = "";
+                if(trueChild.causeOfBirth)
+                    tag = "T";
+                else
+                    tag = "F";
+                DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(((ConditionStatement)trueChild.getCondition()).printValue()+tag);
                 traverseTree(trueChild,childNode);
                 node.add(childNode);
             }
             if(tree.getFalseChildren() != null)
             {
                 TreeNode falseChild = tree.getFalseChildren();
-                DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(((ConditionStatement)falseChild.getCondition()).printValue());
+                String tag = "";
+                if(falseChild.causeOfBirth)
+                    tag = "T";
+                else
+                    tag = "F";
+                
+                DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(((ConditionStatement)falseChild.getCondition()).printValue()+tag);
                 traverseTree(falseChild,childNode);
                 node.add(childNode);
             }

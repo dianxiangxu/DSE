@@ -8,6 +8,7 @@ import java.util.*;
 
 import com.microsoft.z3.*;
 import dse.nazmul.ConditionStatement;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -271,7 +272,11 @@ class Z3ConditionSolution
         }
         arr = vector.toArray(new String[vector.size()]);
         System.out.println("INPUT:"+vector);
-        invoker.invoke(arr);                
+        try {                
+            invoker.invoke(arr);
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+        }
         processFileAndCreateModel(op);
     }
     
