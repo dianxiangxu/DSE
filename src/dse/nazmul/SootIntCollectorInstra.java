@@ -69,7 +69,7 @@ public class SootIntCollectorInstra {
 	public static void updateLocal(String lhs, String op1, String op2, String op){		
 	//	System.out.println(currentMethod + " uL," + lhs + "," + op1 + "," + op2 + "," + op);  6FEB
                 //logger.info(currentMethod + " uL," + lhs + "," + op1 + "," + op2 + "," + op);
-		//System.out.println("UL:"+currentMethod + " uL," + lhs + "," + op1 + "," + op2 + "," + op); //nazmul
+//		System.out.println("UL:"+currentMethod + " uL," + lhs + "," + op1 + "," + op2 + "," + op); //nazmul
 		System.out.flush();
 		
 		String lhsVar = currentMethod+"_"+lhs;
@@ -80,10 +80,10 @@ public class SootIntCollectorInstra {
 		//Op1 is not a int
 		if(op1Const){
 			op1Val = op1;
-		//	System.out.println("UM:1"+op1Val);//nazmul  //6FEB
+//			System.out.println("UL:1"+op1Val);//nazmul  //6FEB
 		} else {
 			op1Val = localMap.get(op1Var);
-		//	System.out.println("UM:2"+op1Val);//nazmul  6FEB
+//			System.out.println("UL:2"+op1Val);//nazmul  6FEB
 			if(op1Val == null){
 				//System.out.println("WARNING: cannot find local, assigning symbolic. Make sure it's ok");  6FEB
 				//System.out.println("Map " + localMap);           6FEB
@@ -91,7 +91,7 @@ public class SootIntCollectorInstra {
 //				symbCount++;
 			}
 		}
-		//System.out.println("op1Val " + op1Val);
+//		System.out.println("op1Val " + op1Val);
 		if(op=="" && op2==""){
 			// a simple assignment
 			localMap.put(lhsVar, op1Val);
@@ -113,6 +113,7 @@ public class SootIntCollectorInstra {
 				op2Val = localMap.get(op2Var);
 				//System.out.println("UM:7");//nazmul
 			}
+  //                      System.out.println("LOCAL:"+"("+op1Val+op+op2Val+")");
 			localMap.put(lhsVar, "("+op1Val+op+op2Val+")");
 		}
 		

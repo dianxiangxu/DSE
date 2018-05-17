@@ -10,6 +10,7 @@ import dse.nazmul.ConditionStatement;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JFrame;
@@ -38,10 +39,10 @@ class TreeGenerator
         nodeStack = new ListStack();
         textAreaOutput = "";
     }
-    
-   
+       
     public void invokeFirstTime()
     {
+        clear();
         invokeManager.invokeFromModel(null);
         UniquePath uniquePath = invokeManager.getUniquePath();
         
@@ -87,8 +88,7 @@ class TreeGenerator
         JPanel outputPanel = new JPanel();
         outputPanel.setPreferredSize(new Dimension(width, 360));
         outputPanel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
-        outputPanel.add(new JTextArea(textAreaOutput,27, 45));
-        
+        outputPanel.add(new JTextArea(textAreaOutput,27, 45));        
         return outputPanel;
     }
     
@@ -161,45 +161,44 @@ class TreeGenerator
             nextNode.invoked = true;
             nextNode.reachFeasible = true;
             nextNode.model = uniquePath.model;
-            //nextNode.getParent().trueChecked = true;
         }
         else
         {
             System.out.println("Start Tree comparing");
             boolean eligibleToAdd = false;
-            int value = 2;
+            int conditionEquivalencyValue = 2;
             System.out.println((ConditionStatement)nextNode.getCondition());
             while(it.hasNext())
             {
                
                ConditionStatement comparableCondition = (ConditionStatement) it.next();
                System.out.println(comparableCondition);
-               System.out.println("VAL:1:"+value);
-               if(value>=2)
+               System.out.println("Equivalency Value:1:"+conditionEquivalencyValue);
+               if(conditionEquivalencyValue>=2)     // 2 means completely different condition
                {   
-                   System.out.println("VAL:2:"+value);
-                   value = ((ConditionStatement)nextNode.getCondition()).compareEquivalency(comparableCondition); 
-                   System.out.println("VAL:3:"+value);
-                   if(value ==0 || value ==1)
+                   System.out.println("Equivalency Value:2:"+conditionEquivalencyValue);
+                   conditionEquivalencyValue = ((ConditionStatement)nextNode.getCondition()).compareEquivalency(comparableCondition); 
+                   System.out.println("Equivalency Value:3:"+conditionEquivalencyValue);
+                   if(conditionEquivalencyValue ==0 || conditionEquivalencyValue ==1)
                     {
-                        System.out.println("VAL:4:"+value);
+                        System.out.println("Equivalency Value:4:"+conditionEquivalencyValue);
                         eligibleToAdd = true;
                         continue;
                     }
                }
-               System.out.println("VAL:5:"+value);
+               System.out.println("Equivalency Value:5:"+conditionEquivalencyValue);
                if(eligibleToAdd)
                {
-                   if(value == 0)
+                   if(conditionEquivalencyValue == 0)    //means same condition true value
                    {
-                       System.out.println("VAL:6:"+value);
+                       System.out.println("Equivalency Value:6:"+conditionEquivalencyValue);
                        nextNode = addToTrueBranch(nextNode,comparableCondition);
                    }
-                   else
+                   else                               // 1 means same condition negative value
                    {
-                       System.out.println("VAL:7:"+value);
+                       System.out.println("Equivalency Value:7:"+conditionEquivalencyValue);
                        nextNode = addToFalseBranch(nextNode,comparableCondition);
-                       value = 0;
+                       conditionEquivalencyValue = 0;
                    }
                }
             }
@@ -223,9 +222,7 @@ class TreeGenerator
             conditionTracer.put(cs.toAlternativeString(), node);
             System.out.println("Added to tracer :"+cs.toAlternativeString());
             node.trueChecked = true;
-            //node.addTrueBranch(new TreeNode());
             nodeStack.push(node);
-            //return node.getTrueChildren();
             temp = node;
         }
         else
@@ -370,6 +367,21 @@ class TreeGenerator
                 preOrderRecursivePrint(root.getFalseChildren());
             if(root.getTrueChildren()!=null)
                 preOrderRecursivePrint(root.getTrueChildren());
+        }
+    }
+    
+    
+    public void clear()
+    {
+        File file = new File("C:\\Users\\Md Nazmul Karim\\Documents\\NetBeansProjects\\MutationTestApp\\build\\classes\\artifacts\\Example1.class");
+         
+        if(file.delete())
+        {
+            System.out.println("File deleted successfully");
+        }
+        else
+        {
+            System.out.println("Failed to delete the file");
         }
     }
 }

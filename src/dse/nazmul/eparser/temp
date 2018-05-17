@@ -1,0 +1,145 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package z3exp;
+
+/***
+ * Excerpted from "The Definitive ANTLR 4 Reference",
+ * published by The Pragmatic Bookshelf.
+ * Copyrights apply to this code. It may not be used to create training material, 
+ * courses, books, articles, and the like. Contact us if you are in doubt.
+ * We make no guarantees that this code is fit for any purpose. 
+ * Visit http://www.pragmaticprogrammer.com/titles/tpantlr2 for more book information.
+***/
+import com.microsoft.z3.ArithExpr;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.IntExpr;
+import com.microsoft.z3.Model;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
+import java.util.HashMap;
+import java.util.Map;
+
+public class EvalVisitor extends ConditionExpBaseVisitor<ComplexExpression> {
+    /** "memory" for our calculator; variable/value pairs go here */
+    Map<String, Integer> memory = new HashMap<String, Integer>();
+    Context context = null;
+    HashMap<String, String> cfg = new HashMap<String, String>();
+    HashMap<String, IntExpr> existingSymbol = new HashMap<String, IntExpr>();
+    Solver mainSolver = null; 
+    ArithExpr expression = null;
+    
+    ComplexExpression comExpr =null;
+    
+    public EvalVisitor(){
+    
+        cfg.put("model", "true");
+        context = new Context(cfg);
+        existingSymbol.clear();
+        
+        mainSolver = context.mkSolver();        
+        mainSolver.reset();
+        existingSymbol.clear();
+    }
+   
+    /** INT */
+    @Override
+    public ComplexExpression visitInt(ConditionExpParser.IntContext ctx) {
+        String id = ctx.INT().getText();
+        System.out.println("Int:"+id);
+        IntExpr aIntExpr = null;
+        
+        ComplexExpression aComplexExpression = new ComplexExpression();
+        
+        if(existingSymbol.get(id)!= null)
+        {
+            aIntExpr =  existingSymbol.get(id);
+        }
+        else
+        {
+            aIntExpr = context.mkInt(Integer.parseInt(id));// Integer.valueOf(ctx.INT().getText());
+        }
+        aComplexExpression.setIntExpression(aIntExpr);
+        
+        return aComplexExpression;
+    }
+
+    /** ID */
+    @Override
+    public ComplexExpression visitId(ConditionExpParser.IdContext ctx) {
+        String id = ctx.ID().getText();
+        System.out.println("Int:"+id);
+        IntExpr aIntExpr = null;
+        
+        ComplexExpression aComplexExpression = new ComplexExpression();
+        
+        if(existingSymbol.get(id)!= null)
+        {
+            aIntExpr = (IntExpr) existingSymbol.get(id);
+        }
+        else
+        {
+            aIntExpr = context.mkIntConst(id);// Integer.valueOf(ctx.INT().getText());
+        }
+        aComplexExpression.setIntExpression(aIntExpr);
+        
+        return aComplexExpression;
+    }
+
+   
+
+    /** expr op=('+'|'-') expr */
+    @Override
+    public ComplexExpression visitArithOperation(ConditionExpParser.ArithOperationContext ctx) {
+        ComplexExpression left = visit(ctx.expr(0));  // get value of left subexpression
+        ComplexExpression right = visit(ctx.expr(1)); // get value of right subexpression
+        
+        ComplexExpression aComplexExpression = new ComplexExpression();
+        
+        boolean leftInt = false;
+        boolean rightInt = false;
+        
+        if(left.getExpressionType() == ComplexExpression.EXP_INT)
+        {
+            leftInt = true;
+        }
+        if(right.getExpressionType() == ComplexExpression.EXP_INT)
+        {
+            rightInt = true;
+        }
+        
+        if ( ctx.op.getType() == ConditionExpParser.ADD ) 
+            aComplexExpression.setArithExpression( context.mkAdd( leftInt?left.getIntegerExpression():left.getArithmeticExpression(),rightInt?right.getIntegerExpression():right.getArithmeticExpression()));
+        else if ( ctx.op.getType() == ConditionExpParser.SUB ) 
+            aComplexExpression.setArithExpression( context.mkSub( leftInt?left.getIntegerExpression():left.getArithmeticExpression(),rightInt?right.getIntegerExpression():right.getArithmeticExpression())); // must be SUB
+        
+        return aComplexExpression;
+    }
+
+    /** '(' expr ')' */
+    @Override
+    public ComplexExpression visitParens(ConditionExpParser.ParensContext ctx) {
+        return visit(ctx.expr()); // return child expr's value
+    }
+    
+     @Override
+    public ComplexExpression visitPrintExpr(ConditionExpParser.PrintExprContext ctx) {
+        ComplexExpression value = visit(ctx.expr()); // evaluate the expr child
+        System.out.println(value.arithmeticExpression);         // print the result
+        comExpr = value;
+        mainSolver.add(context.mkGt(value.arithmeticExpression, context.mkInt(Integer.parseInt("5"))));
+        
+        Model model = null;
+        if (Status.SATISFIABLE == mainSolver.check())
+        {
+            model = mainSolver.getModel();
+            System.out.println(model);
+                      
+        }
+        
+        return value;                          // return dummy value
+    }
+}
+

@@ -172,17 +172,19 @@ public class ConditionStatement {
     
     public int compareEquivalency(ConditionStatement comparableStatement)
     {
-        int returnValue = 2;
+        int returnValue = 2;  //completely diffenent condition
         
         if((this.lineNo+this.leftHand+this.operand+this.rightHand).equalsIgnoreCase((comparableStatement.lineNo+comparableStatement.leftHand+comparableStatement.operand+comparableStatement.rightHand)))
-            returnValue = 0;
+        {   
+            returnValue = 0;     // same condition and same truth value
+        }
         else if((this.lineNo+this.leftHand+operandNegationMap.get(this.operand)+this.rightHand).equalsIgnoreCase((comparableStatement.lineNo+comparableStatement.leftHand+comparableStatement.operand+comparableStatement.rightHand)))
         {
-            returnValue = 1;
+            returnValue = 1;     // same condition with negatetive truth value
         }
         else
         {
-            returnValue = 2;
+            returnValue = 2;     // means different condition
         }
         return returnValue;                
     }

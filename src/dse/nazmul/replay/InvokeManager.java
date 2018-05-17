@@ -120,13 +120,13 @@ class InvokeManager
     
    
     
-     public void testInvoke()
+     public void testInvoke(int noOfParameters)
      {
          Random rand = new Random(100);
         String[] arr = {};
         Vector<String> vector = new Vector<String>();
         
-        for(int i = 0; i< 3;i++)
+        for(int i = 0; i< noOfParameters;i++)
         {
             vector.add(Integer.toString(rand.nextInt(100)));
         }

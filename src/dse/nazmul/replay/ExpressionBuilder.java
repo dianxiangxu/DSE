@@ -117,8 +117,7 @@ public class ExpressionBuilder {
     
     private void makeExpression(ConditionStatement stmt, Solver mainSolver)
     {
-        
-        
+             
         if(stmt.getOperand().equals("<"))
         {
             mainSolver.add(context.mkLt(getExpression(stmt.getLeftHand(),stmt.getLeftHandType()),getExpression(stmt.getRightHand(),stmt.getrightHandType())));
@@ -141,6 +140,29 @@ public class ExpressionBuilder {
     }
     
     private IntExpr getExpression(String literal, int type)
+    {
+        IntExpr expr = null;
+        
+        if(existingSymbol.get(literal)!= null)
+        {
+            expr = (IntExpr) existingSymbol.get(literal);
+        }
+        else
+        {
+            if(type == ConditionStatement.IDENTIFIER)
+            {
+                 expr = context.mkIntConst(literal);
+            }
+            else if(type == ConditionStatement.INTEGER)
+            {
+                 expr = context.mkInt(Integer.parseInt(literal));
+            }
+        }
+        
+        return expr;    
+    }
+    
+    private IntExpr getComplexExpression(String literal, int type)
     {
         IntExpr expr = null;
         

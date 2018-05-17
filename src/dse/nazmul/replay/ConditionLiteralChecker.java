@@ -36,6 +36,15 @@ public class ConditionLiteralChecker {
     }
     
     
+    public static int getType(String literal)
+    {
+        if (isInt(literal)) {
+            return INTEGER;
+        } else {
+            return IDENTIFIER;
+        }
+    }
+    
     private static boolean isInt(String s) {
         try {
             Integer.parseInt(s);

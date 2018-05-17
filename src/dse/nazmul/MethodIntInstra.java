@@ -27,6 +27,7 @@ import soot.SootClass;
 import soot.SootField;
 import soot.SootMethod;
 import soot.Unit;
+import soot.UnitBox;
 import soot.Value;
 import soot.jimple.BinopExpr;
 import soot.jimple.IntConstant;
@@ -167,10 +168,29 @@ public class MethodIntInstra extends BodyTransformer {
 		System.out.println("MARK0:");   //nazmul
                 //
                 int count =0;
+                
 		while(iterForPrinting.hasNext()){
 			Unit u = iterForPrinting.next();
                         count++;
 			System.out.println("Unit : "+count+" : "+u.toString());
+                        //Tags tags = null;
+//                       List<UnitBox> ubx = u.getUnitBoxes();
+//                       if(u.fallsThrough())
+//                       {   
+//                           System.out.println("Falls through");
+//                           for (int i = 0; i < ubx.size(); i++) {
+//                            System.out.print("Target status: "+ubx.get(i).isBranchTarget());
+//                            }
+//                       }
+//                       else
+//                       {    
+//                           System.out.println("Does not Fall through");
+//                            for (int i = 0; i < ubx.size(); i++) {
+//                            System.out.print("Target status: "+ubx.get(i).isBranchTarget());
+//                            }
+//                           
+//                       }
+                       
 		}
 		System.out.println("MARK0: ENDS");//nazmul
 		

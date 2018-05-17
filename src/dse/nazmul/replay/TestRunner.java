@@ -9,16 +9,18 @@ package dse.nazmul.replay;
  *
  * @author Md Nazmul Karim
  */
-public class MainCaller {
+public class TestRunner {
     
-    
-    public static void main(String[] args)
+     InvokeManager invokeManager = null;
+     
+    public TestRunner()
     {
-//        TreeGenerator treeGenerator = new TreeGenerator();
-//        treeGenerator.invokeFirstTime();
-        
-        TestRunner testRunner = new TestRunner();
-        testRunner.testAPass();
+        invokeManager = new InvokeManager();
+    }
+    
+    public void testAPass()
+    {
+        invokeManager.testInvoke(3);
     }
     
 }

@@ -335,35 +335,37 @@ public class Example1 {
         int y = y1;
         int z = z1;
         
-        if (x1 > 0 ) 
+        if (x1 > 2 ) 
         {
             x = x + 3;
             
-            if(y1 > 2)
-            {
-                x = x+y;
-                
-                if(z1>15)
+//            for(int k=0; k<3 ; k++)
+//            {
+                if(y1 > 5)
                 {
-                    y = y+2;
+                    x = x+y;
+
+                    if(z1>15)
+                    {
+                        y = y+2;
+                    }
+                    else
+                    {
+                        y = y -1;
+                    }
                 }
                 else
                 {
-                    y = y -1;
+                    if(z1>20)
+                    {
+                        y = y+2;
+                    }
+                    else
+                    {
+                        y = y -1;
+                    }
                 }
-            }
-            else
-            {
-                if(z1>20)
-                {
-                    y = y+2;
-                }
-                else
-                {
-                    y = y -1;
-                }
-            }
-            
+           // }
         }
         else
         {
@@ -384,7 +386,7 @@ public class Example1 {
             }
             else
             {
-                if(z1>3)
+                if(z1>9)
                 {
                     y = y+2;
                 }
@@ -395,6 +397,58 @@ public class Example1 {
             }
         }
         z = x + y +z ;
+        return z;
+    }
+     static int example_18(int x1, int y1, int z1) {
+         
+        int x = x1;
+        int y = y1;
+        int z = z1;
+        
+        int k = 0;
+        
+        while(k<3)
+        {
+//                if(y1 > 5)
+//                {
+                    x = x+y;     
+                    k++;
+//                }
+//                else
+//                {
+//                    x = y + z;
+//                }
+                
+            }    
+        if(x > 5)
+            z = x + y +z ;
+        return z;
+    }
+     
+     static int example_19(int x1, int y1, int z1) {
+         
+        int x = x1;
+        int y = y1;
+        int z = z1;
+        
+        int k = 0;
+        x= 2*x;
+        y= y+1;
+        y = 2*y;
+        
+        if(y > 5)
+        {
+            x = x+y;     
+            k++;
+        }
+        else
+        {
+            x = y + z;
+        }
+                
+             
+        if(x > 5)
+            z = x + y +z ;
         return z;
     }
      
@@ -411,7 +465,8 @@ public class Example1 {
                     int x = Integer.valueOf(args[0]);
 		    int y = Integer.valueOf(args[1]);
 		    int z = Integer.valueOf(args[2]);
-		    System.out.println(example_17(x,y,z));
+		    System.out.println(example_18(x,y,z));
+		   // System.out.println(example_19(x,y,z));
 //                }
                 
                 
