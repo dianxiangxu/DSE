@@ -22,29 +22,31 @@ import java.util.Map;
 
 public class EvalVisitor extends ConditionExpBaseVisitor<ArithExpr> {
     /** "memory" for our calculator; variable/value pairs go here */
-    Map<String, Integer> memory = new HashMap<String, Integer>();
+    //Map<String, Integer> memory = new HashMap<String, Integer>();
+    
     Context context = null;
-    HashMap<String, String> cfg = new HashMap<String, String>();
-    HashMap<String, IntExpr> existingSymbol = new HashMap<String, IntExpr>();
-    Solver mainSolver = null; 
+   // HashMap<String, String> cfg = new HashMap<String, String>();
+    HashMap<String, IntExpr> existingSymbol = null;
+   // Solver mainSolver = null; 
     ArithExpr expression = null;
     
-    public EvalVisitor(){
+    public EvalVisitor(Context ctx, HashMap<String, IntExpr> existingSym){
     
-        cfg.put("model", "true");
-        context = new Context(cfg);
-        existingSymbol.clear();
+        //cfg.put("model", "true");
+        context = ctx;
+        existingSymbol = existingSym;
+        //expression = null;
         
-        mainSolver = context.mkSolver();        
-        mainSolver.reset();
-        existingSymbol.clear();
+        //mainSolver = context.mkSolver();        
+        //mainSolver.reset();
+        //existingSymbol.clear();
     }
    
     /** INT */
     @Override
     public IntExpr visitInt(ConditionExpParser.IntContext ctx) {
         String id = ctx.INT().getText();
-        System.out.println("Int:"+id);
+        //System.out.println("Int:"+id);
         if(existingSymbol.get(id)!= null)
         {
             System.out.println("Symbol already exists:"+id);
@@ -61,7 +63,7 @@ public class EvalVisitor extends ConditionExpBaseVisitor<ArithExpr> {
     @Override
     public IntExpr visitId(ConditionExpParser.IdContext ctx) {
         String id = ctx.ID().getText();
-        System.out.println("ID:"+id);
+       //System.out.println("ID:"+id);
         if(existingSymbol.get(id)!= null)
         {
             System.out.println("Symbol already exists:"+id);
@@ -83,12 +85,12 @@ public class EvalVisitor extends ConditionExpBaseVisitor<ArithExpr> {
         if(visit(ctx.expr(0)) instanceof IntExpr)
         {
             leftIsInt = true;
-            System.out.println("left is int");
+           // System.out.println("left is int");
         }
         if(visit(ctx.expr(1)) instanceof IntExpr)
         {
             rightIsInt = true;
-             System.out.println("left is int");
+             //System.out.println("left is int");
         }
         
        // ArithExpr left = visit(ctx.expr(0)) ;  // get value of left subexpression
@@ -111,16 +113,23 @@ public class EvalVisitor extends ConditionExpBaseVisitor<ArithExpr> {
     public ArithExpr visitPrintExpr(ConditionExpParser.PrintExprContext ctx) {
         ArithExpr value = visit(ctx.expr()); // evaluate the expr child
         System.out.println(value);         // print the result
-        System.out.println(value.simplify()); 
+        expression = value;
+        //System.out.println(value.simplify().toString()); 
+        //System.out.println(value.);
+        
+        //ArithExpr part0 = context.mkAdd();
+       // ArithExpr another = context.mkMul();
+        
+        
         return value;                          // return dummy value
     }
     
-    public void reset()
-    {
-        this.mainSolver.reset();
-        this.existingSymbol.clear();
-        this.expression = null;
-    }
+//    public void reset()
+//    {
+//        //this.mainSolver.reset();
+//        this.existingSymbol.clear();
+//        this.expression = null;
+//    }
     
     public ArithExpr getArithmeticExpression()
     {

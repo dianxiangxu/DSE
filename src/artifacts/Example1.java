@@ -406,18 +406,21 @@ public class Example1 {
         int z = z1;
         
         int k = 0;
+//        x= 2*x;
+//        y= y+1;
+//        y = 2*y;
         
         while(k<3)
         {
-//                if(y1 > 5)
-//                {
+                if(y > 5)
+                {
                     x = x+y;     
                     k++;
-//                }
-//                else
-//                {
-//                    x = y + z;
-//                }
+                }
+                else
+                {
+                    x = y + z;
+                }
                 
             }    
         if(x > 5)
@@ -436,7 +439,7 @@ public class Example1 {
         y= y+1;
         y = 2*y;
         
-        if(y > 5)
+        if(y > x)
         {
             x = x+y;     
             k++;

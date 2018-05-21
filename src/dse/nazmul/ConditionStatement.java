@@ -53,7 +53,7 @@ public class ConditionStatement {
         this.operand = op;
         this.rightHand = right;
         this.lineNo = lineNo;
-        this.setConditionliteraltypes();
+       // this.setConditionliteraltypes();    //COMPLEX
     }
     
    
@@ -105,7 +105,7 @@ public class ConditionStatement {
         this.lineNo = ln;
     }
     
-    public boolean negateCondition()
+    public boolean negateCondition()               // negate this existing object
     {
         System.out.println("Negation Called.");
         boolean negationSuccessfull = false;
@@ -121,7 +121,7 @@ public class ConditionStatement {
         return negationSuccessfull;
     }
     
-    public ConditionStatement returnNegateCondition()
+    public ConditionStatement returnNegateCondition()   //means negate and send new negated condition
     {
         System.out.println("Negate.");
         boolean negationSuccessfull = false;
