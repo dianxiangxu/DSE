@@ -19,6 +19,8 @@ public class MainCaller {
         
 //        TestRunner testRunner = new TestRunner();
 //        testRunner.testAPass();
+        
+     //   Utility.getCurrentDirectory();
     }
     
 }

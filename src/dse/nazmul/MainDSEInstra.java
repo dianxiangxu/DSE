@@ -1,23 +1,26 @@
 package dse.nazmul;
 
-import dse.nazmul.MethodIntInstra;
+import dse.nazmul.replay.Utility;
 import soot.PackManager;// manages packs that contains various phases
 import soot.Scene;// Manages all the Classes in a Scene
 import soot.SootClass;// Class in Soot 
 import soot.Transform; // (phaseName, singleton) needed for transformation
 
 public class MainDSEInstra{
-	
+        
+        
 	public static void main(String[] args){
 		
-		String[] sootArgs=  {"-f", "c","--app","artifacts.Example1"};
+		String[] sootArgs=  {"-f", "c","--app","artifacts."+Utility.className};
 
 		//adding runtime to the path
-		Scene.v().setSootClassPath(Scene.v().getSootClassPath()+
+                String sootClassPath = Scene.v().getSootClassPath()+
 		System.getProperty("path.separator")+
 		System.getProperty("sun.boot.class.path")+
 		System.getProperty("path.separator")+
-		System.getProperty("user.dir")+"/src");
+		System.getProperty("user.dir")+"/src";
+                System.out.println("Soot Class Path :"+sootClassPath);
+		Scene.v().setSootClassPath(sootClassPath);
 				
 		//loading collector classes
 		Scene.v().loadClassAndSupport("dse.nazmul.SootIntCollectorInstra");

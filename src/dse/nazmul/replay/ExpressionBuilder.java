@@ -146,6 +146,14 @@ public class ExpressionBuilder {
         {
             mainSolver.add(context.mkGe(getComplexExpression(stmt.getLeftHand()),getComplexExpression(stmt.getRightHand())));
         }
+        else if(stmt.getOperand().equals("=="))
+        {
+            mainSolver.add(context.mkEq(getComplexExpression(stmt.getLeftHand()),getComplexExpression(stmt.getRightHand())));
+        }
+        else if(stmt.getOperand().equals("!="))
+        {
+            mainSolver.add(context.mkNot(context.mkEq(getComplexExpression(stmt.getLeftHand()),getComplexExpression(stmt.getRightHand()))));
+        }
         
        }
        catch(Exception e)

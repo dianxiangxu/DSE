@@ -20,7 +20,7 @@ public class TestRunner {
     
     public void testAPass()
     {
-        invokeManager.testInvoke(3);
+        invokeManager.testInvoke(2);
     }
     
 }

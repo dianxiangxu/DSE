@@ -116,12 +116,8 @@ public class EvalVisitor extends ConditionExpBaseVisitor<ArithExpr> {
         expression = value;
         //System.out.println(value.simplify().toString()); 
         //System.out.println(value.);
-        
-        //ArithExpr part0 = context.mkAdd();
-       // ArithExpr another = context.mkMul();
-        
-        
-        return value;                          // return dummy value
+       
+        return value;                          
     }
     
 //    public void reset()

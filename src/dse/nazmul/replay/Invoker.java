@@ -5,6 +5,7 @@
  */
 package dse.nazmul.replay;
 
+import dse.nazmul.MainDSEInstra;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,14 +23,14 @@ public class Invoker {
         Class[] argTypes = new Class[1];
         argTypes[0] = String[].class;
         try {
-            String absPath = "C:/Users/Md Nazmul Karim/Documents/NetBeansProjects/MutationTestApp/sootOutput";
+            String absPath = Utility.sootOutputDir;
            
             File f = new File(absPath);
             URL[] cp = {f.toURI().toURL()};
             URLClassLoader urlcl = new URLClassLoader(cp);
-            Class clazz = urlcl.loadClass("artifacts.Example1");
-            
-            
+            String className = Utility.sutPackage+"."+Utility.className;
+            System.out.println("Class Name : "+absPath+"\\"+className);
+            Class clazz = urlcl.loadClass(className);            
             Method mainMethod = clazz.getDeclaredMethod("main", argTypes);
             Object[] argListForInvokedMain = new Object[1];
             argListForInvokedMain[0] = arr;

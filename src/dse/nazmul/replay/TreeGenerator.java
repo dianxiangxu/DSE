@@ -7,6 +7,7 @@ package dse.nazmul.replay;
 
 import com.microsoft.z3.Model;
 import dse.nazmul.ConditionStatement;
+import dse.nazmul.MainDSEInstra;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -30,6 +31,7 @@ class TreeGenerator
     ListStack nodeStack = null;
     
     String textAreaOutput = "";
+    int noOfPaths = 0;
     
     public TreeGenerator()
     {
@@ -43,6 +45,7 @@ class TreeGenerator
     public void invokeFirstTime()
     {
         clear();
+        noOfPaths = 0;
         invokeManager.invokeFromModel(null);
         UniquePath uniquePath = invokeManager.getUniquePath();
         
@@ -203,9 +206,9 @@ class TreeGenerator
                }
             }
         }
-        
+        noOfPaths++;
         System.out.println("ADDING To OUTPUT:"+uniquePath.descriptionString + "::"+ uniquePath.inputAsString + "\n");
-        textAreaOutput += uniquePath.descriptionString + "::"+ uniquePath.inputAsString + "\n";
+        textAreaOutput += noOfPaths+" :"+uniquePath.descriptionString + "::"+ uniquePath.inputAsString + "\n";
         return nextNode;
 
     }
@@ -352,8 +355,9 @@ class TreeGenerator
         }
         else
         {
+            noOfPaths++;
             System.out.println("ADDING To OUTPUT:"+up.descriptionString + "::"+ "Not feasible" + "\n");
-            textAreaOutput += up.descriptionString + "::"+ "Not feasible" + "\n";
+            textAreaOutput += noOfPaths+" :"+up.descriptionString + "::"+ "Not feasible" + "\n";
         
         }
     }
@@ -373,8 +377,9 @@ class TreeGenerator
     
     public void clear()
     {
-        File file = new File("C:\\Users\\Md Nazmul Karim\\Documents\\NetBeansProjects\\MutationTestApp\\build\\classes\\artifacts\\Example1.class");
-         
+        File file = new File(Utility.getCurrentDirectory()+Utility.neatbeansCompilationDir+Utility.className+".class");
+        
+        System.out.println(file.toString());
         if(file.delete())
         {
             System.out.println("File deleted successfully");

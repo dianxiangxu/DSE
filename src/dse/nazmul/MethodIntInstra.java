@@ -97,7 +97,7 @@ public class MethodIntInstra extends BodyTransformer {
 		condition = collectorClass.getMethod
 				("void condition(java.lang.String,java.lang.String,java.lang.String,int,int)");
 		updateLocal = collectorClass.getMethod
-				("void updateLocal(java.lang.String,java.lang.String,java.lang.String,java.lang.String)");
+				("void updateLocal(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)");  //22 May 2018 added 1 more String for current method
 		idenStmt = collectorClass.getMethod("void idenStmt(java.lang.String,java.lang.String)");
 		returnMethod = collectorClass.getMethod("void returnMethod(java.lang.String)");
 		arrayListInit = arrayListClass.getMethod("void <init>()");
@@ -219,9 +219,9 @@ public class MethodIntInstra extends BodyTransformer {
 				Value rightOperand = jAssignStmt.getRightOp();
 				System.out.println("This Left Op is a " +jAssignStmt.getLeftOp().getClass().getSimpleName());
 				System.out.println("This Right Op is a " +jAssignStmt.getRightOp().getClass().getSimpleName());
-				
+				System. out.println("CURR METHOD:"+currentMethod);   //added 22 May 2018 for current method
 				if(leftOperand instanceof JimpleLocal){
-					addToMap(insertMapBefore,u,updateLocal(leftOperand.toString(),rightOperand));
+					addToMap(insertMapBefore,u,updateLocal(currentMethod,leftOperand.toString(),rightOperand));  ////added 22 May 2018 for current method
 					System.out.println("ATP JAS for JL");
 				}
 			}
@@ -231,11 +231,12 @@ public class MethodIntInstra extends BodyTransformer {
 				System.out.println( "Identity:Count:("+stmtCount+ "):"+u.toString());
 				Value leftOp = jIdentityStmt.getLeftOp();
 				paramsVars.add(leftOp);
+                                System. out.println("CURR METHOD:"+currentMethod);     //added 22 May 2018 for current method
 				
 				System.out.println("This Left Op is a " +jIdentityStmt.getLeftOp().getClass().getSimpleName());
 				System.out.println("This Right Op is a " +jIdentityStmt.getRightOp().getClass().getSimpleName());
 				
-				addToMap(insertMapAfter,lastIdentity,identityStmt(currentMethod, leftOp.toString()));
+				addToMap(insertMapAfter,lastIdentity,identityStmt(currentMethod, leftOp.toString()));  //added 22 May 2018 for current method
 				
 				
 			}
@@ -245,7 +246,7 @@ public class MethodIntInstra extends BodyTransformer {
 				System.out.println("Ifstmt:Count:("+stmtCount+ "):"+jIfStmt);			
 				System.out.println("The conditions is a " +jIfStmt.getCondition().getClass().getSimpleName());
 				System.out.println("The target is a " +jIfStmt.getTarget().getClass().getSimpleName());
-				
+				System. out.println("CURR METHOD:"+currentMethod);    //added 22 May 2018 for current method
 				String ifStmt = jIfStmt.getConditionBox().getValue().toString();
 				System.out.println("If Condition: " + ifStmt);
 							
@@ -287,6 +288,7 @@ public class MethodIntInstra extends BodyTransformer {
 				JInvokeStmt jInvokeStmt= (JInvokeStmt) u;
 				System.out.println("Invooke:Count:("+stmtCount+ "):"+jInvokeStmt);
 				InvokeExpr invokeExpr = jInvokeStmt.getInvokeExpr();
+                                System. out.println("CURR METHOD:"+currentMethod);        //added 22 May 2018 for current method
 				addToMap(insertMapBefore, u, processInvokeExpr(jInvokeStmt.getInvokeExpr(), newLocalVars));
 				System.out.println("ATP JIS ");
 			}
@@ -295,7 +297,8 @@ public class MethodIntInstra extends BodyTransformer {
 				JReturnStmt jReturnStmt= (JReturnStmt) u;
 				System.out.println("Return:Count: ("+stmtCount+ "):"+u.toString());
 				Value op = ((JReturnStmt) u).getOp();
-				addToMap(insertMapBefore, u, updateLocal(jReturnStmt.toString(),op));
+                                System. out.println("CURR METHOD:"+currentMethod);         //added 22 May 2018 for current method
+				addToMap(insertMapBefore, u, updateLocal(currentMethod,jReturnStmt.toString(),op));
 				System.out.println("ATP JRS ");
 			}
 			//Case of Jimple Local Variable  
@@ -304,6 +307,7 @@ public class MethodIntInstra extends BodyTransformer {
 				localVarCount ++;
 				JimpleLocal jimpleLocal= (JimpleLocal) u;
 				System.out.println("jimple local:Count:("+stmtCount+ "):"+u.toString());
+                                System. out.println("CURR METHOD:"+currentMethod);       //added 22 May 2018 for current method
 				String name  =((JimpleLocal) u).getName();
 				Integer num =((JimpleLocal) u).getNumber();
 				Type type = ((JimpleLocal) u).getType();
@@ -410,7 +414,7 @@ public class MethodIntInstra extends BodyTransformer {
 	
 	
 
-	private Chain<Unit> updateLocal(String lhs, Value rhs){
+	private Chain<Unit> updateLocal(String currMethod, String lhs, Value rhs){      ////added 22 May 2018 for current method
 		System.out.println("update local called : "+lhs+"|"+rhs);
 		Chain<Unit> updateLocalChain = new PatchingChain<Unit>(new HashChain<Unit>());
 		String op1="", op2="", op="";
@@ -434,6 +438,7 @@ public class MethodIntInstra extends BodyTransformer {
 		args.add(StringConstant.v(op1));
 		args.add(StringConstant.v(op2));
 		args.add(StringConstant.v(op));
+		args.add(StringConstant.v(currMethod));       //added 22 May 2018 for current method
 		
 		if(op1 != ""){
 			System.out.println("Op1 "+op1);
@@ -477,7 +482,7 @@ public class MethodIntInstra extends BodyTransformer {
 		return returnChain;
 	}
 
-	private void addToMap(Map<Unit, Chain<Unit>> map, Unit key, Chain<Unit> value){
+	private void addToMap(Map<Unit, Chain<Unit>> map,       Unit key,     Chain<Unit> value){
 		
 		if(map.containsKey(key)){
 			//get the previously added units
