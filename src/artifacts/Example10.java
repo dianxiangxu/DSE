@@ -26,7 +26,9 @@ public class Example10 {
                 return returnValue;
 	}
     
-    public static int noOfArguments = 2;
+    public static int noOfArguments = 3;
+    
+    
     public static void main(String[] args)
     {
         int x = Integer.valueOf(args[0]);

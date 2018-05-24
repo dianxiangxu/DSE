@@ -273,7 +273,7 @@ public class SootIntCollectorInstra {
 			SootIntCollectorInstra.conditionSaver.put(condLinNumber.get(i),newConditions.get(i));
                         
 		}
-                new ShutdownInstra().doJob();
+                new ShutdownInstra().doPreShutdownJob();
               System.out.println("Collector :"+currentMethod+"-> returnMethod() End*******");  
 	}
 }

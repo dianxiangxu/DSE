@@ -9,13 +9,16 @@ import java.util.*;
 
 import com.microsoft.z3.*;
 import dse.nazmul.ConditionStatement;
+import java.io.File;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class InvokeManager
 {
-    private static String fileName = "output.txt";
     ConditionFileReader fileReader = null;
     Vector fileEntry = null;
     ExpressionBuilder expressionBuilder = null;
@@ -39,8 +42,8 @@ class InvokeManager
     
     private void processFileReading()
     {
-        fileReader.readConditionFile(fileName, fileEntry);
-        fileReader.clearFile(fileName);
+        fileReader.readConditionFile(Utility.outputFile, fileEntry);
+        fileReader.clearFile(Utility.outputFile);
     }
     
     private void clearStructures()
@@ -88,7 +91,7 @@ class InvokeManager
         String[] arr = {};
         Vector<String> vector = new Vector<String>();
         
-        for(int i = 0; i< 3;i++)
+        for(int i = 0; i< getNoOfArguments();i++)
         {
             vector.add(Integer.toString(rand.nextInt(100)));
         }
@@ -118,6 +121,30 @@ class InvokeManager
         this.uniquePath.storeInputAsString(vector.toString());
     }
     
+    
+    public int getNoOfArguments()
+    {
+        String absPath = Utility.sootOutputDir;
+        int noOfArguments = -1;
+        File f = new File(absPath);
+        try{
+            URL[] cp = {f.toURI().toURL()};
+            URLClassLoader urlcl = new URLClassLoader(cp);
+            String className = Utility.sutPackage+"."+Utility.className;
+            System.out.println("Class Name : "+absPath+"\\"+className);
+            Class clazz = urlcl.loadClass(className);  
+            Object boo = clazz.newInstance();
+            Field field1 = clazz.getDeclaredField("noOfArguments");
+            noOfArguments = field1.getInt(boo);
+            System.out.println("NO OF ARGS:"+noOfArguments);
+      
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return noOfArguments;
+    }
    
     
      public void testInvoke(int noOfParameters)

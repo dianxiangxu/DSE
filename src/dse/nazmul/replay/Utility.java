@@ -5,6 +5,8 @@
  */
 package dse.nazmul.replay;
 
+import java.io.File;
+
 /**
  *
  * @author Md Nazmul Karim
@@ -25,5 +27,20 @@ public class Utility {
         String workingDir = System.getProperty("user.dir");
         System.out.println("Current working directory : " + workingDir);
         return workingDir;
+    }
+    
+    public static void clear()
+    {
+        File file = new File(Utility.getCurrentDirectory()+Utility.neatbeansCompilationDir+Utility.className+".class");
+        
+        System.out.println(file.toString());
+        if(file.delete())
+        {
+            System.out.println("File deleted successfully");
+        }
+        else
+        {
+            System.out.println("Failed to delete the file");
+        }
     }
 }

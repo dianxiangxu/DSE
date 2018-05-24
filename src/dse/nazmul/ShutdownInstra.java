@@ -18,11 +18,11 @@ public class ShutdownInstra extends Thread {
 	
 	public void run(){
 		System.out.println("Shutdown hook called");
-		File out = new File(Utility.tempFile);
-		File out2 = new File(Utility.outputFile);
+		File tempFileAllLog = new File(Utility.tempFile);
+		File outputFile = new File(Utility.outputFile);
 		try{
-			FileWriter fw = new FileWriter(out,true);
-			FileWriter fw2 = new FileWriter(out2,true);
+			FileWriter fwTemp = new FileWriter(tempFileAllLog,true);
+			FileWriter fwOutput = new FileWriter(outputFile,true);
 			
 			//Iterator it = SootIntCollectorInstra.conditionHolder.iterator();         //Vector
 			Iterator it = SootIntCollectorInstra.conditionSaver.entrySet().iterator();  //HashMap
@@ -36,35 +36,30 @@ public class ShutdownInstra extends Thread {
                                 System.out.println(pair.getKey() + " = " );
                                 cs = (ConditionStatement) pair.getValue();
                                //fw.write("Line Num:"+cm.getLineNumber()+" :"+cm.getConditionStatement()+"\n");
-                                fw.write("Line Num:"+pair.getKey()+" :"+cs+"\n");
-                                fw2.write(cs.getLineNo()+"~"+cs.leftHand+"~"+cs.operand+"~"+cs.rightHand+"\n");
-				fw.flush();
-				fw2.flush();
+                                fwTemp.write("Line Num:"+pair.getKey()+" :"+cs+"\n");
+                                fwOutput.write(cs.getLineNo()+"~"+cs.leftHand+"~"+cs.operand+"~"+cs.rightHand+"\n");
+				fwTemp.flush();
+				fwOutput.flush();
 			}
-//			for(String c: SootIntCollectorInstra.conditions){
-//				fw.write(c+"\n");
-//				fw.flush();
-//			}
-			fw.flush();
-			fw.close();
-                        fw2.flush();
-			fw2.close();
+
+			fwTemp.flush();
+			fwTemp.close();
+                        fwOutput.flush();
+			fwOutput.close();
 		}catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			 //TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-        public void doJob(){
+        public void doPreShutdownJob(){
 		System.out.println("Shutdown hook doJob called");
-		File out = new File(Utility.tempFile);
-		File out2 = new File(Utility.outputFile);
+		File tempFileAllLog = new File(Utility.tempFile);
+		File outputFile = new File(Utility.outputFile);
 		try{
-			FileWriter fw = new FileWriter(out,true);
-			FileWriter fw2 = new FileWriter(out2,true);
+			FileWriter fwTempLog = new FileWriter(tempFileAllLog,true);
+			FileWriter fwOutput = new FileWriter(outputFile,true);
 			
 			//Iterator it = SootIntCollectorInstra.conditionHolder.iterator();         //Vector
                         
@@ -83,30 +78,22 @@ public class ShutdownInstra extends Thread {
 				Map.Entry pair = (Map.Entry)it.next();
                                // System.out.println(pair.getKey() + " = " );
                                 cs = (ConditionStatement) pair.getValue();
-                               //fw.write("Line Num:"+cm.getLineNumber()+" :"+cm.getConditionStatement()+"\n");
-                                //fw.write("Line Num:"+pair.getKey()+" :"+cs+"\n");
-                                //fw2.write(cs.leftHand+"~"+cs.operand+"~"+cs.rightHand+"\n");
-				fw.write("Line Num:"+pair.getKey()+" :"+cs+"\n");
-                                fw2.write(cs.getLineNo()+"~"+cs.leftHand+"~"+cs.operand+"~"+cs.rightHand+"\n");
+                                fwTempLog.write("Line Num:"+pair.getKey()+" :"+cs+"\n");
+                                fwOutput.write(cs.getLineNo()+"~"+cs.leftHand+"~"+cs.operand+"~"+cs.rightHand+"\n");
 				
-                                fw.flush();
-				fw2.flush();
+                                fwTempLog.flush();
+				fwOutput.flush();
 			}
+                        fwTempLog.write("*****************\n");
                         clearSootCollector();
                        
-//			for(String c: SootIntCollectorInstra.conditions){
-//				fw.write(c+"\n");
-//				fw.flush();
-//			}
-			fw.flush();
-			fw.close();
-                        fw2.flush();
-			fw2.close();
+        		fwTempLog.flush();
+			fwTempLog.close();
+                        fwOutput.flush();
+			fwOutput.close();
 		}catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			 //TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

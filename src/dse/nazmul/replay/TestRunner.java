@@ -5,6 +5,12 @@
  */
 package dse.nazmul.replay;
 
+import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+
 /**
  *
  * @author Md Nazmul Karim
@@ -20,7 +26,16 @@ public class TestRunner {
     
     public void testAPass()
     {
-        invokeManager.testInvoke(2);
+        Utility.clear();        
+        try {
+            int noOfArguments = invokeManager.getNoOfArguments();
+            System.out.println("NO OF ARGS:" + noOfArguments);
+            invokeManager.testInvoke(noOfArguments);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        new ConditionFileReader().clearFile(Utility.outputFile);
     }
     
 }

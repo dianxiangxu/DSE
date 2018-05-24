@@ -44,7 +44,7 @@ class TreeGenerator
        
     public void invokeFirstTime()
     {
-        clear();
+        Utility.clear();
         noOfPaths = 0;
         invokeManager.invokeFromModel(null);
         UniquePath uniquePath = invokeManager.getUniquePath();
@@ -375,18 +375,5 @@ class TreeGenerator
     }
     
     
-    public void clear()
-    {
-        File file = new File(Utility.getCurrentDirectory()+Utility.neatbeansCompilationDir+Utility.className+".class");
-        
-        System.out.println(file.toString());
-        if(file.delete())
-        {
-            System.out.println("File deleted successfully");
-        }
-        else
-        {
-            System.out.println("Failed to delete the file");
-        }
-    }
+    
 }
