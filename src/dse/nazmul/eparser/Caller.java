@@ -47,7 +47,7 @@ public class Caller {
         mainSolver.reset();       
 
 
-        ANTLRInputStream input = new ANTLRInputStream("(2*(p2+1))\n"); 
+        ANTLRInputStream input = new ANTLRInputStream("((-(p1+1)) + 10)\n"); 
         
         ConditionExpLexer lexer = new ConditionExpLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -58,34 +58,34 @@ public class Caller {
        //eval.visit(tree);
         
         ArithExpr e1 =  eval.visit(tree);
-        System.out.println(e1);
+        System.out.println(e1.simplify());
         
-        ANTLRInputStream input2 = new ANTLRInputStream("((2*p1))\n"); 
-        
-        ConditionExpLexer lexer2 = new ConditionExpLexer(input2);
-        CommonTokenStream tokens2 = new CommonTokenStream(lexer2);
-        ConditionExpParser parser2 = new ConditionExpParser(tokens2);
-        ParseTree tree2 = parser2.prog();
-        
-        EvalVisitor eval2 = new EvalVisitor(context,existingSymbol);
-       //eval.visit(tree);
-         ArithExpr e2 =eval2.visit(tree2);
-         
-         System.out.println(e2);
-         mainSolver.add(context.mkGt(e2, e1));
-         
-         
-         Model model = null;
-        if (Status.SATISFIABLE == mainSolver.check())
-        {
-            model = mainSolver.getModel();
-            System.out.println(model);
-           
-        } 
-        else
-        {
-           System.out.println("Not satisfiable.");
-        }
+//        ANTLRInputStream input2 = new ANTLRInputStream("((2*p1))\n"); 
+//        
+//        ConditionExpLexer lexer2 = new ConditionExpLexer(input2);
+//        CommonTokenStream tokens2 = new CommonTokenStream(lexer2);
+//        ConditionExpParser parser2 = new ConditionExpParser(tokens2);
+//        ParseTree tree2 = parser2.prog();
+//        
+//        EvalVisitor eval2 = new EvalVisitor(context,existingSymbol);
+//       //eval.visit(tree);
+//         ArithExpr e2 =eval2.visit(tree2);
+//         
+//         System.out.println(e2);
+//         mainSolver.add(context.mkGt(e2, e1));
+//         
+//         
+//         Model model = null;
+//        if (Status.SATISFIABLE == mainSolver.check())
+//        {
+//            model = mainSolver.getModel();
+//            System.out.println(model);
+//           
+//        } 
+//        else
+//        {
+//           System.out.println("Not satisfiable.");
+//        }
         //System.out.println();
         
        // System.out.println(eval.comExpr.arithmeticExpression.simplify());

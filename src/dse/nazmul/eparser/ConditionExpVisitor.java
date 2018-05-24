@@ -24,6 +24,13 @@ public interface ConditionExpVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrintExpr(ConditionExpParser.PrintExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code unaryBitwise}
+	 * labeled alternative in {@link ConditionExpParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnaryBitwise(ConditionExpParser.UnaryBitwiseContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code parens}
 	 * labeled alternative in {@link ConditionExpParser#expr}.
 	 * @param ctx the parse tree
@@ -37,6 +44,20 @@ public interface ConditionExpVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitArithOperation(ConditionExpParser.ArithOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code BitWiseOperation}
+	 * labeled alternative in {@link ConditionExpParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBitWiseOperation(ConditionExpParser.BitWiseOperationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code UnaryArithOperation}
+	 * labeled alternative in {@link ConditionExpParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnaryArithOperation(ConditionExpParser.UnaryArithOperationContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code id}
 	 * labeled alternative in {@link ConditionExpParser#expr}.
