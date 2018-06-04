@@ -21,7 +21,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
  *
  * @author Md Nazmul Karim
  */
-public class Caller {
+public class AntlrRunner {
     
     public static void main(String[] args) throws Exception {
 //        String inputFile = null; 
@@ -46,8 +46,26 @@ public class Caller {
         Solver mainSolver = context.mkSolver();        
         mainSolver.reset();       
 
+//        String inputAnd = "((10&6)+4)";
+//        String inputOr = "((10|6)+4)";
+//        String inputXor = "((10^6)+4)";
+//        String inputMod = "((10%6)+4)";
+//        String inputRS = "((10>>2)+4)";
+//        String inputLS = "((10<<2)+4)";
+//        String inputZRS = "((5>>>1)+4)";
+//        String inputUnary = "((-(5-10))+4)";
+        String inputStr = "(((p1+30)+30)+30)";
 
-        ANTLRInputStream input = new ANTLRInputStream("((-(p1+1)) + 10)\n"); 
+
+//        ANTLRInputStream input = new ANTLRInputStream(inputAnd+"\n"); 
+//        ANTLRInputStream input = new ANTLRInputStream(inputOr+"\n"); 
+//        ANTLRInputStream input = new ANTLRInputStream(inputXor+"\n"); 
+//        ANTLRInputStream input = new ANTLRInputStream(inputMod+"\n"); 
+//        ANTLRInputStream input = new ANTLRInputStream(inputRS+"\n"); 
+//        ANTLRInputStream input = new ANTLRInputStream(inputLS+"\n"); 
+//        ANTLRInputStream input = new ANTLRInputStream(inputZRS+"\n"); 
+     //   ANTLRInputStream input = new ANTLRInputStream(inputUnary+"\n"); 
+        ANTLRInputStream input = new ANTLRInputStream(inputStr+"\n"); 
         
         ConditionExpLexer lexer = new ConditionExpLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);

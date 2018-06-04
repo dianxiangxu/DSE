@@ -135,7 +135,8 @@ public class MethodIntInstra extends BodyTransformer {
 				className.getName().contains("SootIntCollectorInstra")   ||
 				className.getName().contains("ShutdownInstra") ||
 				className.getName().contains("ConditionMetrics")||
-				className.getName().contains("ConditionStatement")
+				className.getName().contains("ConditionStatement")||
+                                className.getName().contains("Utility")
                         ){
 			return;
 		}
@@ -172,7 +173,7 @@ public class MethodIntInstra extends BodyTransformer {
 		while(iterForPrinting.hasNext()){
 			Unit u = iterForPrinting.next();
                         count++;
-			System.out.println("Unit : "+count+" : "+u.toString());
+			System.out.println(""+count+" : "+u.toString());
                         //Tags tags = null;
 //                       List<UnitBox> ubx = u.getUnitBoxes();
 //                       if(u.fallsThrough())
@@ -260,7 +261,7 @@ public class MethodIntInstra extends BodyTransformer {
 				addToMap(insertMapBefore, u, condition(ifConds.get(rhs), ifConds.get(lhs), ifConds.get(op), 1, stmtCount));
 				addToMap(insertMapAfter, u, condition(ifConds.get(rhs), ifConds.get(lhs), ifConds.get(op), 0, stmtCount));				
 			}
-//			else if (u instanceof JIfStmt){
+//			if (u instanceof JIfStmt){
 //				// track the condition that use integer values
 //				JIfStmt ifStmt = (JIfStmt) u;
 //				Value condition = ifStmt.getCondition();
@@ -274,14 +275,14 @@ public class MethodIntInstra extends BodyTransformer {
 //					String lhs = op1.toString();
 //					String rhs = be.getOp2().toString();
 //					String op = be.getSymbol().trim();
-//					Chain<Unit> trueOutcome = conditional(rhs, lhs, op, 1);
+//					Chain<Unit> trueOutcome = condition(rhs, lhs, op, 1,stmtCount);
 //					//insertMapBefore.put(u, trueOutcome);
-//					addToTheMap(insertMapBefore,u,trueOutcome);
-//					Chain<Unit> falseOutcome = conditional(rhs, lhs, op, 0);
+//					addToMap(insertMapBefore,u,trueOutcome);
+//					Chain<Unit> falseOutcome = condition(rhs, lhs, op, 0,stmtCount);
 //					//insertMapAfter.put(u, falseOutcome);
-//					addToTheMap(insertMapAfter,u,falseOutcome);
+//					addToMap(insertMapAfter,u,falseOutcome);
 //				}
-			
+//                        }
 			//Case of Jimple Invoke Statement 
 			if(u instanceof JInvokeStmt){		
 				//Not added to localMap
@@ -399,18 +400,18 @@ public class MethodIntInstra extends BodyTransformer {
 		return condChain; 
 	}
 	
-	private Chain<Unit> conditional(String rhs, String lhs, String op, int result){
-		Chain<Unit> conditionalChain = new PatchingChain<Unit>(new HashChain<Unit>());
-		List<Value> args = new ArrayList<Value>();
-		args.add(StringConstant.v(rhs));
-		args.add(StringConstant.v(lhs));
-		args.add(StringConstant.v(op));
-		args.add(IntConstant.v(result));
-		JStaticInvokeExpr newExpr = new JStaticInvokeExpr(condition.makeRef(), args);
-		JInvokeStmt newStmt= new JInvokeStmt(newExpr);
-		conditionalChain.add(newStmt);
-		return conditionalChain;
-	}
+//	private Chain<Unit> conditional(String rhs, String lhs, String op, int result){
+//		Chain<Unit> conditionalChain = new PatchingChain<Unit>(new HashChain<Unit>());
+//		List<Value> args = new ArrayList<Value>();
+//		args.add(StringConstant.v(rhs));
+//		args.add(StringConstant.v(lhs));
+//		args.add(StringConstant.v(op));
+//		args.add(IntConstant.v(result));
+//		JStaticInvokeExpr newExpr = new JStaticInvokeExpr(condition.makeRef(), args);
+//		JInvokeStmt newStmt= new JInvokeStmt(newExpr);
+//		conditionalChain.add(newStmt);
+//		return conditionalChain;
+//	}
 	
 	
 
@@ -499,6 +500,10 @@ public class MethodIntInstra extends BodyTransformer {
 		}
 		
 	}
+        
+//        private void addToTheMap(Map<Unit, Chain<Unit>> insertMapBefore, Unit u, Chain<Unit> trueOutcome) {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 	
 	private HashMap<String,String> stringConditionToString(JIfStmt currIfStmt){
 		//Get the if condition from the statement
@@ -661,6 +666,8 @@ public class MethodIntInstra extends BodyTransformer {
 		}
 		return invokeUnits;
 	}
+
+    
 
 }
 

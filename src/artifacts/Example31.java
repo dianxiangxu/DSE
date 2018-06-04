@@ -9,34 +9,32 @@ package artifacts;
  *
  * @author Md Nazmul Karim
  */
-public class Example11 {
+public class Example31 {
     static int example(int x1, int y1, int z1) {
          
         int x = x1;
         int y = y1;
         int z = z1;
         
-        int k = 0;
-        x= 2*x;
-        y= y+1;
-        y = 2*y;
-        
-        if(y > x)
+        int k = 10;
+        // the inner condition has no dependency on loop condition : loop condition is symbolic : inner cond is concrete
+        while( x< (y+20))
         {
-            x = x+y;     
-            k++;
-        }
-        else
-        {
-            x = y + z;
-        }
-                
-             
+            
+            if(k > 30)
+            {
+                x = x-2;     
+            }
+            else
+            {
+                x = x+20;
+            } 
+           // k = k+15;
+        }    
         if(x > 5)
             z = x + y +z ;
         return z;
     }
-    
     public static int noOfArguments = 3;
     public static void main(String[] args)
     {

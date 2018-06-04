@@ -66,7 +66,9 @@ class InvokeManager
                 String[] tokens = line.split(innerDelim);
                 
                 ConditionStatement statement = null;
+                System.out.println("Condition:"+tokens[0] +","+ tokens[1] + ","+ tokens[2] +","+ tokens[3]);
                 statement = new ConditionStatement(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3]);
+                statement.checkForLoop();
                 uniquePath.addACondition(statement);
             }
 

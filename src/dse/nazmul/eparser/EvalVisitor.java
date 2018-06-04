@@ -84,16 +84,19 @@ public class EvalVisitor extends ConditionExpBaseVisitor<ArithExpr> {
         if(visit(ctx.expr(0)) instanceof IntExpr)
         {
             leftIsInt = true;
-           // System.out.println("left is int");
+            //System.out.println("left is int");
         }
         if(visit(ctx.expr(1)) instanceof IntExpr)
         {
             rightIsInt = true;
-             //System.out.println("left is int");
+            //System.out.println("right is int");
         }
+       
+       
         
-        // ArithExpr left = visit(ctx.expr(0)) ;  // get value of left subexpression
-        // ArithExpr right = visit(ctx.expr(1)); // get value of right subexpression
+//         ArithExpr left = visit(ctx.expr(0)) ;  // get value of left subexpression
+//         ArithExpr right = visit(ctx.expr(1)); // get value of right subexpression
+//         System.out.println(left.toString());
         switch (ctx.op.getType()) {
             case ConditionExpParser.ADD:
                 return context.mkAdd( leftIsInt?(IntExpr)visit(ctx.expr(0)):(ArithExpr)visit(ctx.expr(0)),rightIsInt?(IntExpr)visit(ctx.expr(1)):(ArithExpr)visit(ctx.expr(1)));

@@ -5,6 +5,9 @@
  */
 package dse.nazmul;
 
+import dse.nazmul.test.PatternDefinition;
+import dse.nazmul.test.PatternFinder;
+import dse.nazmul.test.StringUtil;
 import java.util.HashMap;
 
 /**
@@ -45,6 +48,8 @@ public class ConditionStatement {
     int lineNo = 0;
     boolean booleanValue = true;
     
+    public boolean hasLoop = false;
+    
     int leftHandType = 0;    
     int rightHandType = 0;
     
@@ -53,9 +58,36 @@ public class ConditionStatement {
         this.operand = op;
         this.rightHand = right;
         this.lineNo = lineNo;
+       // System.out.println("before:"+this.toString());
        // this.setConditionliteraltypes();    //COMPLEX
+        //checkForLoop();
+       // System.out.println("after:"+this.toString());
     }
     
+    public void checkForLoop()
+    {
+        PatternDefinition pdL ;
+        
+        if(!isInt(this.leftHand))
+        {
+            pdL= new StringUtil().hasLoopPattern(this.leftHand);
+            if( pdL.isHasLoop())
+            {    
+                this.leftHand = pdL.getBase();
+                this.operand = operandNegationMap.get(this.operand);
+            }
+        }
+        PatternDefinition pdR ;
+        if(!isInt(this.rightHand))
+        {
+            pdR= new StringUtil().hasLoopPattern(this.rightHand);
+            if(pdR.isHasLoop())
+            {    
+                this.rightHand = pdR.getBase();
+                this.operand = operandNegationMap.get(this.operand);
+            }
+        }
+    }
    
     public void setLeftHandType(int leftHandType) {
         this.leftHandType = leftHandType;

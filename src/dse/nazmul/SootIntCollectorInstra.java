@@ -68,9 +68,9 @@ public class SootIntCollectorInstra {
 	 */
 	public static void updateLocal(String lhs, String op1, String op2, String op,String method){
             currentMethod = method;
-            System.out.println("Collector :"+currentMethod+"-> updateLocal() Start*******");
+         //   System.out.println("Collector :"+currentMethod+"-> updateLocal() Start*******");
 	//	System.out.println(currentMethod + " uL," + lhs + "," + op1 + "," + op2 + "," + op);  6FEB
-    		System.out.println("UL:"+currentMethod + " uL," + lhs + "," + op1 + "," + op2 + "," + op); //nazmul
+    	//	System.out.println("UL:"+currentMethod + " uL," + lhs + "," + op1 + "," + op2 + "," + op); //nazmul
 		System.out.flush();
 		
 		String lhsVar = currentMethod+"_"+lhs;
@@ -84,7 +84,7 @@ public class SootIntCollectorInstra {
 			System.out.println("UL:1"+op1Val);//nazmul  //6FEB
 		} else {
 			op1Val = localMap.get(op1Var);
-			System.out.println("UL:2"+op1Val);//nazmul  6FEB
+	//		System.out.println("UL:2"+op1Val);//nazmul  6FEB
 			if(op1Val == null){
 				//System.out.println("WARNING: cannot find local, assigning symbolic. Make sure it's ok");  6FEB
 				//System.out.println("Map " + localMap);           6FEB
@@ -96,11 +96,11 @@ public class SootIntCollectorInstra {
 		if(op=="" && op2==""){
 			// a simple assignment
 			localMap.put(lhsVar, op1Val);
-			System.out.println("UM:3");//nazmul
+	//		System.out.println("UM:3");//nazmul
 		} else if (op2==""){
 			// the negation
 			localMap.put(lhsVar, "("+op+op1Val+")");
-			System.out.println("UM:4");//nazmul
+	//		System.out.println("UM:4");//nazmul
 		} else {
 			// full binary expression
 			String op2Var = currentMethod+"_"+op2;
@@ -114,10 +114,10 @@ public class SootIntCollectorInstra {
 				op2Val = localMap.get(op2Var);
 				//System.out.println("UM:7");//nazmul
 			}
-                        System.out.println("LOCAL:"+lhsVar+":("+op1Val+op+op2Val+")");
+              //          System.out.println("LOCAL:"+lhsVar+":("+op1Val+op+op2Val+")");
 			localMap.put(lhsVar, "("+op1Val+op+op2Val+")");
 		}
-             System.out.println("Collector :"+currentMethod+"-> updateLocal() End*******");
+        //     System.out.println("Collector :"+currentMethod+"-> updateLocal() End*******");
 	}
 
 	public static void assignLocal(String lhs, Object o, String field){
@@ -239,14 +239,14 @@ public class SootIntCollectorInstra {
 	}
 	
 	public static void idenStmt(String currMethod, String var){
-                System.out.println("Collector :"+currentMethod+"-> idenStmt() Start*******");
+       //         System.out.println("Collector :"+currentMethod+"-> idenStmt() Start*******");
 		currentMethod = currMethod;
 		//create a new symbolic variable
 		String symbVal = "p"+ symbCount;
 		symbCount++;
 		localMap.put(currentMethod+"_"+var, symbVal);
-                System.out.println("Method Name:"+currentMethod+"|Variable Name:"+var+"|Symbol :"+symbVal); //nazmul
-                System.out.println("Collector :"+currentMethod+"-> idenStmt() End*******");
+     //           System.out.println("Method Name:"+currentMethod+"|Variable Name:"+var+"|Symbol :"+symbVal); //nazmul
+     //           System.out.println("Collector :"+currentMethod+"-> idenStmt() End*******");
 	}
 
 	public static void beforeInvoke(List<String> args, String toMethod){
@@ -265,15 +265,15 @@ public class SootIntCollectorInstra {
 	}
 	
 	public static void returnMethod(String retVar){
-              System.out.println("Collector :"+currentMethod+"-> returnMethod() Start*******");    //6FEB
+        //      System.out.println("Collector :"+currentMethod+"-> returnMethod() Start*******");    //6FEB
 		for( int i=0 ; i< conditions.size(); i++)
 		{
-			System.out.println("Condition:"+ conditions.get(i) + ", Unit:" +condLinNumber.get(i));  //6FEB
+	//		System.out.println("Condition:"+ conditions.get(i) + ", Unit:" +condLinNumber.get(i));  //6FEB
 			SootIntCollectorInstra.conditionHolder.add(new ConditionMetrics(conditions.get(i),condLinNumber.get(i)));
 			SootIntCollectorInstra.conditionSaver.put(condLinNumber.get(i),newConditions.get(i));
                         
 		}
                 new ShutdownInstra().doPreShutdownJob();
-              System.out.println("Collector :"+currentMethod+"-> returnMethod() End*******");  
+        //      System.out.println("Collector :"+currentMethod+"-> returnMethod() End*******");  
 	}
 }

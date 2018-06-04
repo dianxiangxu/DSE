@@ -9,7 +9,7 @@ package artifacts;
  *
  * @author Md Nazmul Karim
  */
-public class Example11 {
+public class Example29 {
     static int example(int x1, int y1, int z1) {
          
         int x = x1;
@@ -17,26 +17,27 @@ public class Example11 {
         int z = z1;
         
         int k = 0;
-        x= 2*x;
-        y= y+1;
-        y = 2*y;
+//        x= 2*x;
+//        y= y+1;
+//        y = 2*y;
         
-        if(y > x)
+        while(k<3)
         {
-            x = x+y;     
-            k++;
-        }
-        else
-        {
-            x = y + z;
-        }
+            if((k % 2) == 0)
+            {
+                x = x+y;     
                 
-             
+            }
+            else
+            {
+                x = x-y;
+            }
+            k++;    
+        }    
         if(x > 5)
             z = x + y +z ;
         return z;
     }
-    
     public static int noOfArguments = 3;
     public static void main(String[] args)
     {

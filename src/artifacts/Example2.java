@@ -11,22 +11,26 @@ package artifacts;
  */
 public class Example2 {
     
-     static int example_20(int x1, int y1) {
+      int example(int x1, int y1) {
 
         if (x1 > 0  && y1>1 ) 
         {
             x1 = x1 + 3;
         }
-        int z = 10;
+        int z = m(10);
         
         if(z>3)
             return 8;
         return z;
     }
      
-     static int m(int x)
+      int m(int x)
      {
-         int y = 2*x;
+         int y = 0;
+         if(x>10)
+             y = y+5;
+         else
+             y = y*2;
          return y;
      }
      
@@ -34,7 +38,7 @@ public class Example2 {
 	public static void main(String[] args){
                     int x = Integer.valueOf(args[0]);
 		    int y = Integer.valueOf(args[1]);
-		    System.out.println(example_20(x,y));
+		    System.out.println(new Example2().example(x,y));
 		
 	}
     

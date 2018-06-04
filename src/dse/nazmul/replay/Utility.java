@@ -13,7 +13,9 @@ import java.io.File;
  */
 public class Utility {
     
-    public static String className = "Example10";
+    public static String className = "Example27";
+    
+    
     public static String neatbeansCompilationDir = "\\build\\classes\\artifacts\\"; 
     public static String sutPackage = "artifacts"; 
     public static String sootOutputDir = getCurrentDirectory()+"\\"+
@@ -31,7 +33,7 @@ public class Utility {
     
     public static void clear()
     {
-        File file = new File(Utility.getCurrentDirectory()+Utility.neatbeansCompilationDir+Utility.className+".class");
+        File file = new File(Utility.getCurrentDirectory()+Utility.neatbeansCompilationDir+className+".class");
         
         System.out.println(file.toString());
         if(file.delete())

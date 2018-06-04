@@ -17,13 +17,11 @@ public class Example7 {
         int z = z1;
         
         int k = 0;
-//        x= 2*x;
-//        y= y+1;
-//        y = 2*y;
+
         
         while(k<3)
         {
-            if(y > 5)
+            if(x > 5)
             {
                 x = x+y;     
                 k++;
