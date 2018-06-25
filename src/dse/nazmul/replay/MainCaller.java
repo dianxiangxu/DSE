@@ -13,11 +13,11 @@ public class MainCaller {
     
     public static void main(String[] args)
     {
-        TreeGenerator treeGenerator = new TreeGenerator();
-        treeGenerator.invokeFirstTime();
-//        
-//        TestRunner testRunner = new TestRunner();
-//        testRunner.testAPass();
+//        TreeGenerator treeGenerator = new TreeGenerator();
+//        treeGenerator.invokeFirstTime();
+        
+        TestRunner testRunner = new TestRunner();
+        testRunner.testAPass();
     
     }
     

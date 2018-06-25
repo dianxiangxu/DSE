@@ -14,12 +14,14 @@ public class TreeNode<ConditionStatement>{
 	 
     ConditionStatement data = null;    
     public TreeNode parent = null;
-    public TreeNode trueBranch = null;
+    public TreeNode complementaryNode = null;
+    public TreeNode nextTrueBranch = null;
     public boolean trueChecked = false;   
-    public TreeNode falseBranch = null;
+    public boolean complementaryNodeChecked = false;  
+    public TreeNode nextFalseBranch = null;
     public boolean falseChecked = false;
     public boolean isLeaf = false;          //when has no trueChild and no falseChild
-    public boolean reachFeasible = false;   // condition satisfiable
+    public boolean conditionSatisfiable = false;   // condition satisfiable
     public boolean invoked = false;  // called the method based on this condition
     public boolean fullyExplored = false;  // true when all child is done 
     public Model model =null;
@@ -39,22 +41,22 @@ public class TreeNode<ConditionStatement>{
 
     public void addTrueBranch(TreeNode branch) {
         branch.setParent(this);
-        branch.causeOfBirth = true;
-        this.trueBranch =branch;
+        //branch.causeOfBirth = true;
+        this.nextTrueBranch =branch;
     }
     
     public void addFalseChild(TreeNode branch) {
         branch.setParent(this);
-        branch.causeOfBirth = false;
-        this.falseBranch =branch;
+       // branch.causeOfBirth = false;
+        this.nextFalseBranch =branch;
     }
 
     public TreeNode getTrueChildren() {
-        return this.trueBranch;
+        return this.nextTrueBranch;
     }
     
     public TreeNode getFalseChildren() {
-        return this.falseBranch;
+        return this.nextFalseBranch;
     }
 
     public ConditionStatement getCondition() {

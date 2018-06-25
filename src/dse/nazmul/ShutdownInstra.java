@@ -72,18 +72,28 @@ public class ShutdownInstra extends Thread {
                         
 			//ConditionMetrics cm;
 			ConditionStatement cs;
+                        ConditionStatement conditionMeta = null;
 			while(it.hasNext())
 			{
 				//cm = (ConditionMetrics)it.next();
 				Map.Entry pair = (Map.Entry)it.next();
                                // System.out.println(pair.getKey() + " = " );
                                 cs = (ConditionStatement) pair.getValue();
-                                fwTempLog.write("Line Num:"+pair.getKey()+" :"+cs+"\n");
-                                fwOutput.write(cs.getLineNo()+"~"+cs.leftHand+"~"+cs.operand+"~"+cs.rightHand+"\n");
-				
+                                conditionMeta = (ConditionStatement)SootIntCollectorInstra.lineCounter.get(pair.getKey());
+                                if(conditionMeta.hasLoop)
+                                {
+                                    fwTempLog.write("Line Num:"+pair.getKey()+"~"+conditionMeta+"~"+conditionMeta.hasLoop+"\n");
+                                    fwOutput.write(conditionMeta.getLineNo()+"~"+conditionMeta.baseCondition.leftHand+"~"+conditionMeta.baseCondition.operand+"~"+conditionMeta.baseCondition.rightHand+"~"+conditionMeta.hasLoop+"\n");
+                                }
+                                else
+                                {
+                                    fwTempLog.write("Line Num:"+pair.getKey()+"~"+cs+"~"+conditionMeta+"~"+conditionMeta.hasLoop+"\n");
+                                    fwOutput.write(cs.getLineNo()+"~"+cs.leftHand+"~"+cs.operand+"~"+cs.rightHand+"~"+conditionMeta.hasLoop+"\n");
+                                }
                                 fwTempLog.flush();
 				fwOutput.flush();
 			}
+                        fwTempLog.write("RETURN:"+SootIntCollectorInstra.retVal+"\n");
                         fwTempLog.write("*****************\n");
                         clearSootCollector();
                        
@@ -95,7 +105,11 @@ public class ShutdownInstra extends Thread {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+                
 	}
         
         public void clearSootCollector()

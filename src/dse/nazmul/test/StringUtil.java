@@ -4,6 +4,10 @@
  * and open the template in the editor.
  */
 package dse.nazmul.test;
+//https://www.geeksforgeeks.org/longest-repeating-and-non-overlapping-substring/
+//https://www.programcreek.com/2013/02/leetcode-longest-substring-without-repeating-characters-java/
+
+import java.util.ArrayList;
 
 /**
  *
@@ -64,17 +68,20 @@ public class StringUtil {
     public static void main(String[] args)
     {
         String input = "(2*p1)";
-        input = "((((2*p1)+30)+30)+30)";
+      //  input = "((((2*p1)+30)+30)+30)";
+        input = "((((p1+10)+10)+10)+10)";
         //input = "(30+(30+(30+p1)))";
-        String repeatedString = new StringUtil().longestRepeatedSubstring(input);
+       
        // System.out.println(repeatedString);
         input = input.replace(")", "");
         input = input.replace("(", "");
+        String repeatedString = new StringUtil().longestRepeatedSubstring(input);
         repeatedString = repeatedString.replace(")", "");
         repeatedString = repeatedString.replace("(", "");
     //    System.out.println(input);
         System.out.println("Repeat:"+repeatedString);
-        System.out.println("Base:"+input.replace(repeatedString,""));
+        System.out.println("Base:"+input.replace(repeatedString,"").replace(new StringUtil().runit(repeatedString), ""));
+       // new StringUtil().runit();
     }
     
     public PatternDefinition hasLoopPattern(String input)
@@ -86,12 +93,19 @@ public class StringUtil {
         input = input.replace("(", "");
         repeatedString = repeatedString.replace(")", "");
         repeatedString = repeatedString.replace("(", "");
-        System.out.println(input);
+       // System.out.println(input);
        // System.out.println("Repeat:"+repeatedString);
-        String base = input.replace(repeatedString,"");
-       // System.out.println("Base:"+base);
         
-        
+        String base = input;
+        if(!repeatedString.isEmpty())
+        {
+            base = input.replace(repeatedString,"");
+           // System.out.println("Base:"+base);
+            String smallestRepeat = runit(repeatedString);
+
+           // System.out.println("Smallest Repeat:"+smallestRepeat);
+            base = base.replace(smallestRepeat, "");
+        }
         PatternDefinition patternDefinition = new PatternDefinition();
         
         patternDefinition.setBase(base);
@@ -104,4 +118,34 @@ public class StringUtil {
         
         return patternDefinition;
     }
+    
+    private String runit(String t){
+        ArrayList<String> subs = new ArrayList<>();
+        //String t = "+10+10";
+        String out = null;
+        for (int i = 0; i < t.length(); i++) {
+            if (t.substring(0, t.length() - (i + 1)).equals(t.substring(i + 1, t.length()))) {
+                subs.add(t.substring(0, t.length() - (i + 1)));
+            }
+        }
+        subs.add(0, t);
+        for (int j = subs.size() - 2; j >= 0; j--) {
+            String match = subs.get(j);
+            int mLength = match.length();
+            if (j != 0 && mLength <= t.length() / 2) {
+                if (t.substring(mLength, mLength * 2).equals(match)) {
+                    out = match;
+                    break;
+                }
+            } else {
+                out = match;
+            }
+        }
+       //System.out.println(out);
+        return out;
+    }
+    
+    private void runit2()
+    {}
+
 }

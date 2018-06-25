@@ -6,6 +6,9 @@
 package dse.nazmul.replay;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -13,7 +16,7 @@ import java.io.File;
  */
 public class Utility {
     
-    public static String className = "Example27";
+    public static String className = "Example34";  //2,12,6,6_A, 27,27_C,30_G,30_A
     
     
     public static String neatbeansCompilationDir = "\\build\\classes\\artifacts\\"; 
@@ -44,5 +47,31 @@ public class Utility {
         {
             System.out.println("Failed to delete the file");
         }
+    }
+    
+    public static int isParameterArray(String className)
+    {
+        try 
+        {
+            Class c = Class.forName(className);            
+            Method methods[] = c.getDeclaredMethods();
+            Object obj = null;
+            for (Method cons : methods) 
+            {
+                Class[] params = cons.getParameterTypes();           
+                if (params.length == 1 ) 
+                {
+                    if(params[0].isArray())
+                    System.out.println("is an array");
+                    return 1;
+                }
+
+            } 
+        }
+        catch (ClassNotFoundException ex) 
+        {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 }

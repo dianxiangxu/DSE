@@ -33,6 +33,14 @@ public class ExpressionBuilder {
         z3ExpressionGenerator = new ArithmeticExpressionGenerator(context, existingSymbol);
     }
     
+    private void resetThis()
+    {
+        cfg.clear();
+        cfg.put("model", "true");
+        context = new Context(cfg);
+        existingSymbol.clear();
+    }
+    
     public Context getContext() {
         return context;
     }
@@ -43,9 +51,11 @@ public class ExpressionBuilder {
     
     public void parseAndBuildExpression(UniquePath uniquePath)
     {
+    //    resetThis();
+        
         Solver mainSolver = context.mkSolver();        
         mainSolver.reset();
-        existingSymbol.clear();
+       // existingSymbol.clear();
         z3ExpressionGenerator.setContext(context);
         z3ExpressionGenerator.setExistingSymbol(existingSymbol);
         
@@ -54,10 +64,6 @@ public class ExpressionBuilder {
         Iterator it = uniquePath.path.iterator();
         while (it.hasNext()) {
             ConditionStatement stmt = (ConditionStatement)it.next();
-//            if(context == null)
-//            {
-//                System.out.println("Main Solver is null");
-//            }
             makeExpression(stmt,mainSolver);
             System.out.println(stmt.toString());
         }

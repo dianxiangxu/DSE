@@ -41,6 +41,8 @@ public class Example31 {
         int x = Integer.valueOf(args[0]);
         int y = Integer.valueOf(args[1]);
         int z = Integer.valueOf(args[2]);
+        if(x>y)
+            x= y+10;
         System.out.println(example(x,y,z));
     }
 }

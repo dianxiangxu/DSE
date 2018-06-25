@@ -18,7 +18,7 @@ public class Example30_A {
         
         int k = 0;
         // the inner condition has dependency on loop condition : both conditions are symbolic
-        while( x < 50)
+        while( y < 20)    //40 will create 
         {
             if( x > 30)
             {
@@ -29,7 +29,7 @@ public class Example30_A {
             {
                 k=50;
             }    
-            x = x + 10;
+            y = y + 10;
         }    
         if(x > 5)
             z = x + y +z ;

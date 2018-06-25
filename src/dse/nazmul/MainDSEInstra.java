@@ -10,7 +10,7 @@ public class MainDSEInstra{
         
         
 	public static void main(String[] args){
-		
+    		
 		String[] sootArgs=  {"-f", "c","--app","artifacts."+Utility.className};
 
 		//adding runtime to the path
@@ -36,7 +36,7 @@ public class MainDSEInstra{
 		PackManager.v().getPack("jtp").add(new Transform("jtp.MethodInstrumenter", new MethodIntInstra()));
 		System.out.println("Path" + Scene.v().getSootClassPath());
 		soot.Main.main(sootArgs);
-		
+                		
 	}
 	
 }

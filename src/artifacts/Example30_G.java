@@ -16,7 +16,7 @@ public class Example30_G {
         int y = y1;
         int z = z1;
         
-        int k = 0;
+        int k = y1;
       
         if( k < 50)
         {

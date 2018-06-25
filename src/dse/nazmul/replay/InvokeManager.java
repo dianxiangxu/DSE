@@ -66,9 +66,14 @@ class InvokeManager
                 String[] tokens = line.split(innerDelim);
                 
                 ConditionStatement statement = null;
-                System.out.println("Condition:"+tokens[0] +","+ tokens[1] + ","+ tokens[2] +","+ tokens[3]);
+                System.out.println("Condition:"+tokens[0] +","+ tokens[1] + ","+ tokens[2] +","+ tokens[3]+","+tokens[4]);
                 statement = new ConditionStatement(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3]);
-                statement.checkForLoop();
+                if(tokens[4].equalsIgnoreCase("true"))   //has loop
+                {
+                    statement.hasLoop = true;
+                }
+                
+               // statement.checkForLoopAndUpdate(true);
                 uniquePath.addACondition(statement);
             }
 
@@ -93,7 +98,9 @@ class InvokeManager
         String[] arr = {};
         Vector<String> vector = new Vector<String>();
         
-        for(int i = 0; i< getNoOfArguments();i++)
+        try{
+        int noOfArgs = getNoOfArguments();    
+        for(int i = 0; i< noOfArgs;i++)
         {
             vector.add(Integer.toString(rand.nextInt(100)));
         }
@@ -105,15 +112,22 @@ class InvokeManager
             int pos = 0;
             for(int j=0;j<funcs.length;j++)
             {
-                pos = Integer.parseInt(funcs[j].getName().toString().substring(1))-1;
+                System.out.println("f:"+funcs[j].getName().toString().trim());
+                pos = Integer.parseInt(funcs[j].getName().toString().trim().substring(1));
 
                 Expr fi = model.getConstInterp(funcs[j]);
+                System.out.println("pos:"+pos+"|"+fi.toString());
                 vector.set(pos,fi.toString());
             }
         }
         //vector.add(0,Integer.toString(Example1.noOfArguments));
         arr = vector.toArray(new String[vector.size()]);
         System.out.println("INPUT:"+vector);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         try {                
             invoker.invoke(arr);
         } catch (MalformedURLException ex) {
@@ -158,6 +172,7 @@ class InvokeManager
         for(int i = 0; i< noOfParameters;i++)
         {
             vector.add(Integer.toString(rand.nextInt(100)));
+            //vector.add(Integer.toString(3));
         }
         
          arr = vector.toArray(new String[vector.size()]);

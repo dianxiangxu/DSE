@@ -46,6 +46,8 @@ public class ConditionStatement {
     String rightHand = "";
     String operand = "";
     int lineNo = 0;
+    public int loopStatusCode = 0;
+            
     boolean booleanValue = true;
     
     public boolean hasLoop = false;
@@ -53,40 +55,61 @@ public class ConditionStatement {
     int leftHandType = 0;    
     int rightHandType = 0;
     
+    public ConditionStatement baseCondition = null;
+    
+    public ConditionStatement(boolean b)    // only root empty condition
+    {
+        this.booleanValue = b;
+    }
+    
     public ConditionStatement(int lineNo, String left, String op, String right){
         this.leftHand = left;
         this.operand = op;
         this.rightHand = right;
         this.lineNo = lineNo;
-       // System.out.println("before:"+this.toString());
-       // this.setConditionliteraltypes();    //COMPLEX
-        //checkForLoop();
-       // System.out.println("after:"+this.toString());
+        // this.setConditionliteraltypes();    //Commented when COMPLEX expression has been implemented
     }
     
-    public void checkForLoop()
+    public void setBase(ConditionStatement cs)
     {
-        PatternDefinition pdL ;
+        this.baseCondition = cs;
+    }
+    
+    public boolean checkForLoopAndUpdate(boolean update)
+    {
+        PatternDefinition pdL = null;
+        boolean retValue = false;
         
         if(!isInt(this.leftHand))
         {
             pdL= new StringUtil().hasLoopPattern(this.leftHand);
-            if( pdL.isHasLoop())
-            {    
-                this.leftHand = pdL.getBase();
-                this.operand = operandNegationMap.get(this.operand);
+            if( pdL.isHasLoop() )
+            {   
+                retValue = true;
+                if(update)
+                {
+                    this.leftHand = pdL.getBase();
+                    this.operand = operandNegationMap.get(this.operand);
+                }
             }
         }
-        PatternDefinition pdR ;
+        PatternDefinition pdR = null;
         if(!isInt(this.rightHand))
         {
             pdR= new StringUtil().hasLoopPattern(this.rightHand);
             if(pdR.isHasLoop())
-            {    
-                this.rightHand = pdR.getBase();
-                this.operand = operandNegationMap.get(this.operand);
+            {   
+                retValue = true;
+                if(update)
+                {
+                    this.rightHand = pdR.getBase();
+                    this.operand = operandNegationMap.get(this.operand);
+                }
             }
         }
+       
+        
+        return retValue;
     }
    
     public void setLeftHandType(int leftHandType) {
@@ -133,7 +156,7 @@ public class ConditionStatement {
         return lineNo;
     }
 
-    public void setOperand(int ln) {
+    public void setLineNo(int ln) {
         this.lineNo = ln;
     }
     
@@ -171,12 +194,8 @@ public class ConditionStatement {
     
     public void convertToQuivalentBooleanStatement()
     {
-        //String temp = getLeftHand();
-       //setLeftHand(getRightHand());
-        //setRightHand(temp);
-        this.operand = operandNegationMap.get(this.operand);
-        //this.setConditionliteraltypes();
-        this.booleanValue = false;
+       this.operand = operandNegationMap.get(this.operand);
+       this.booleanValue = false;
     }
     
      public void setConditionliteraltypes() {
@@ -223,7 +242,11 @@ public class ConditionStatement {
     
     public String toString()
     {
-        return this.lineNo+this.leftHand+this.operand+this.rightHand+this.booleanValue;
+        return this.lineNo+this.leftHand+this.operand+this.rightHand+this.booleanValue+hasLoop;
+    }
+    public String raw()
+    {
+        return this.leftHand+this.operand+this.rightHand;
     }
     public String printValue()
     {
@@ -232,7 +255,7 @@ public class ConditionStatement {
     
     public String toAlternativeString()
     {
-        return this.lineNo+this.leftHand+operandNegationMap.get(this.operand)+this.rightHand+!this.booleanValue;
+        return this.lineNo+this.leftHand+operandNegationMap.get(this.operand)+this.rightHand+!this.booleanValue+hasLoop;
     }
     
     public String getDescriptionString()
