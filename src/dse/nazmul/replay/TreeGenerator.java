@@ -65,7 +65,8 @@ class TreeGenerator
     {
         JFrame frame = new JFrame("Condition Tree");
         //String str = ((ConditionStatement)root.getCondition()).printValue();
-        String str = "root";
+        //String str = "root";
+        String str = Utility.className;
         DefaultMutableTreeNode mroot = new DefaultMutableTreeNode(str);
         traverseTree(root,mroot);
         

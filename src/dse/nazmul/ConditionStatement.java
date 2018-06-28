@@ -5,9 +5,9 @@
  */
 package dse.nazmul;
 
-import dse.nazmul.test.PatternDefinition;
-import dse.nazmul.test.PatternFinder;
-import dse.nazmul.test.StringUtil;
+//import dse.nazmul.test.PatternDefinition;
+//import dse.nazmul.test.PatternFinder;
+//import dse.nazmul.test.StringUtil;
 import java.util.HashMap;
 
 /**
@@ -75,42 +75,42 @@ public class ConditionStatement {
         this.baseCondition = cs;
     }
     
-    public boolean checkForLoopAndUpdate(boolean update)
-    {
-        PatternDefinition pdL = null;
-        boolean retValue = false;
-        
-        if(!isInt(this.leftHand))
-        {
-            pdL= new StringUtil().hasLoopPattern(this.leftHand);
-            if( pdL.isHasLoop() )
-            {   
-                retValue = true;
-                if(update)
-                {
-                    this.leftHand = pdL.getBase();
-                    this.operand = operandNegationMap.get(this.operand);
-                }
-            }
-        }
-        PatternDefinition pdR = null;
-        if(!isInt(this.rightHand))
-        {
-            pdR= new StringUtil().hasLoopPattern(this.rightHand);
-            if(pdR.isHasLoop())
-            {   
-                retValue = true;
-                if(update)
-                {
-                    this.rightHand = pdR.getBase();
-                    this.operand = operandNegationMap.get(this.operand);
-                }
-            }
-        }
-       
-        
-        return retValue;
-    }
+//    public boolean checkForLoopAndUpdate(boolean update)
+//    {
+//        PatternDefinition pdL = null;
+//        boolean retValue = false;
+//        
+//        if(!isInt(this.leftHand))
+//        {
+//            pdL= new StringUtil().hasLoopPattern(this.leftHand);
+//            if( pdL.isHasLoop() )
+//            {   
+//                retValue = true;
+//                if(update)
+//                {
+//                    this.leftHand = pdL.getBase();
+//                    this.operand = operandNegationMap.get(this.operand);
+//                }
+//            }
+//        }
+//        PatternDefinition pdR = null;
+//        if(!isInt(this.rightHand))
+//        {
+//            pdR= new StringUtil().hasLoopPattern(this.rightHand);
+//            if(pdR.isHasLoop())
+//            {   
+//                retValue = true;
+//                if(update)
+//                {
+//                    this.rightHand = pdR.getBase();
+//                    this.operand = operandNegationMap.get(this.operand);
+//                }
+//            }
+//        }
+//       
+//        
+//        return retValue;
+//    }
    
     public void setLeftHandType(int leftHandType) {
         this.leftHandType = leftHandType;

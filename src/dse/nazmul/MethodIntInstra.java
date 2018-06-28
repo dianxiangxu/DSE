@@ -29,9 +29,12 @@ import soot.SootMethod;
 import soot.Unit;
 import soot.UnitBox;
 import soot.Value;
+import soot.jimple.ArrayRef;
 import soot.jimple.BinopExpr;
 import soot.jimple.IntConstant;
 import soot.jimple.InvokeExpr;
+import soot.jimple.LengthExpr;
+import soot.jimple.ParameterRef;
 import soot.jimple.Stmt;
 import soot.jimple.StringConstant;
 import soot.jimple.internal.AbstractNegExpr;
@@ -81,6 +84,9 @@ public class MethodIntInstra extends BodyTransformer
     static SootMethod arrayListInit;
     static SootMethod addList;
     static SootMethod returnMethod;
+    static SootMethod arrayLength;
+    static SootMethod newObject;
+    static SootMethod methodInvocation;
 
     static 
     {
@@ -100,6 +106,9 @@ public class MethodIntInstra extends BodyTransformer
         returnMethod = collectorClass.getMethod("void returnMethod(java.lang.String,java.lang.String)");
         arrayListInit = arrayListClass.getMethod("void <init>()");
         addList = listClass.getMethod("boolean add(java.lang.Object)");
+        arrayLength = collectorClass.getMethod("void arrayLength(java.lang.Object,java.lang.String,java.lang.String,java.lang.String)");
+        newObject = collectorClass.getMethod("void newObject(java.lang.String,java.lang.String,java.lang.String)");
+        methodInvocation = collectorClass.getMethod("void methodInvocation(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)");
 
     }
     //This Hash Map will store the three parts of a if statement condition
@@ -112,6 +121,7 @@ public class MethodIntInstra extends BodyTransformer
 
     private int localVarCount = 0;
     private String currentMethod = "";
+    private String currentClass = "";
 
     @Override
     protected void internalTransform(Body b, String phaseName, Map options) 
@@ -126,17 +136,23 @@ public class MethodIntInstra extends BodyTransformer
         //method.method().getParameterCount()
         System.out.println("Method Name " + method);
         SootClass className = method.getDeclaringClass();
+        currentClass = className.toString();
         System.out.println("Class Name " + className.toString());
         System.out.println(" ");
 
         //Skip if it is the main method 
+        
+        if(currentClass.contains("PatternDefinition") || currentClass.contains("StringUtil"))
+        {
+            return;
+        }
         if (method.getName().contains("main") || method.getName().contains("init")
                 || className.getName().contains("SootIntCollectorInstra")
                 || className.getName().contains("ShutdownInstra")
                 || className.getName().contains("ConditionMetrics")
                 || className.getName().contains("ConditionStatement")
-                || className.getName().contains("Utility") //||
-                //   className.getName().contains("MethodInstrumentCaller")
+                || className.getName().contains("Utility") ||
+                   className.getName().contains("longestRepeatedSubstring")
                 ) {
             return;
         }
@@ -201,7 +217,30 @@ public class MethodIntInstra extends BodyTransformer
                 System.out.println("This Left Op is a " + jAssignStmt.getLeftOp().getClass().getSimpleName());
                 System.out.println("This Right Op is a " + jAssignStmt.getRightOp().getClass().getSimpleName());
                 System.out.println("CURR METHOD:" + currentMethod);   //added 22 May 2018 for current method
-                if (leftOperand instanceof JimpleLocal) {
+                if (rightOperand instanceof LengthExpr){
+                    LengthExpr arrayLengthExpr = (LengthExpr) rightOperand;
+                    System.out.println("lenght of " + arrayLengthExpr.getOp());
+                    //insertMapAfter.put(u, arrayLength(arrayLengthExpr.getOp(), left.toString()));
+                    addToMap(insertMapAfter,u, arrayLength(arrayLengthExpr.getOp(), leftOperand.toString(),currentMethod));
+				}
+                else if(rightOperand instanceof JNewExpr)
+                {
+                    JNewExpr newObjExpr = (JNewExpr) rightOperand;
+                    System.out.println("New Obj " + newObjExpr.toString());
+                   // System.out.println("New Obj " + newObjExpr.);
+                  addToMap(insertMapAfter,u, newObject(newObjExpr.toString(), leftOperand.toString(),currentMethod));
+                }
+                else if(rightOperand instanceof JVirtualInvokeExpr)
+                {
+                    JVirtualInvokeExpr invokeExpr = (JVirtualInvokeExpr) rightOperand;
+                    System.out.println("Signature:"+invokeExpr.getMethodRef().getSignature());
+                    System.out.println("Signature:Base:"+invokeExpr.getBase());
+                    System.out.println("Signature:Arg Size"+invokeExpr.getArgs().size());
+                    System.out.println("Signature:"+invokeExpr.getArgBox(0).getValue());
+                    System.out.println("Signature:"+invokeExpr.getMethodRef().name() + "|"+invokeExpr.getMethodRef().returnType());
+                 addToMap(insertMapBefore,u, methodInvocation(invokeExpr.getBase().toString(), invokeExpr.getMethodRef().name().toString(),invokeExpr.getArgBox(0).getValue().toString(),leftOperand.toString(),currentMethod));
+                }
+                else if (leftOperand instanceof JimpleLocal) {
                     addToMap(insertMapBefore, u, updateLocal(currentMethod, leftOperand.toString(), rightOperand, stmtCount));  ////added 22 May 2018 for current method
                     System.out.println("ATP JAS for JL");
                 }
@@ -216,6 +255,12 @@ public class MethodIntInstra extends BodyTransformer
 
                 System.out.println("This Left Op is a " + jIdentityStmt.getLeftOp().getClass().getSimpleName());
                 System.out.println("This Right Op is a " + jIdentityStmt.getRightOp().getClass().getSimpleName());
+                
+//                if(jIdentityStmt.getRightOp() instanceof ParameterRef)
+//                {
+//                    ParameterRef ref  = (ParameterRef) jIdentityStmt.getRightOp();
+//                    System.out.println("IND"+ref.getType().getNumber());
+//                }
 
                 addToMap(insertMapAfter, lastIdentity, identityStmt(currentMethod, leftOp.toString(), stmtCount));  //added 22 May 2018 for current method
 
@@ -395,7 +440,12 @@ public class MethodIntInstra extends BodyTransformer
         System.out.println("update local called : " + lhs + "|" + rhs);
         Chain<Unit> updateLocalChain = new PatchingChain<Unit>(new HashChain<Unit>());
         String op1 = "", op2 = "", op = "";
-
+        
+//       if (rhs instanceof LengthExpr)
+//       {
+//           LengthExpr arrayLengthExpr = (LengthExpr) rhs;
+//           return arrayLength(arrayLengthExpr, lhs);
+//       }
         if (rhs instanceof AbstractNegExpr) {
             AbstractNegExpr ane = (AbstractNegExpr) rhs;
             op1 = ane.getOp().toString();
@@ -435,6 +485,49 @@ public class MethodIntInstra extends BodyTransformer
         return updateLocalChain;
 
     }
+    
+    private Chain<Unit> arrayLength(Value array, String local, String method) {
+		Chain<Unit> arrayLengthChain = new PatchingChain<Unit>(new HashChain<Unit>());
+		List<Value> args = new ArrayList<Value>();
+                System.out.println("Array:"+array);
+		args.add(array);
+		args.add(StringConstant.v(local));
+		args.add(StringConstant.v(array.toString()));
+		args.add(StringConstant.v(method));
+		JStaticInvokeExpr newExpr = new JStaticInvokeExpr(arrayLength.makeRef(), args);
+		JInvokeStmt newStmt = new JInvokeStmt(newExpr);
+		arrayLengthChain.add(newStmt);
+		return arrayLengthChain;
+	}
+    
+    private Chain<Unit> newObject(String newObj, String local, String method) {
+		Chain<Unit> newObjectChain = new PatchingChain<Unit>(new HashChain<Unit>());
+		List<Value> args = new ArrayList<Value>();
+                System.out.println("Obj:"+newObj);
+                String[] tokens = newObj.split("[ ]");
+		args.add(StringConstant.v(tokens[1]));
+		args.add(StringConstant.v(local));
+		args.add(StringConstant.v(method));
+		JStaticInvokeExpr newExpr = new JStaticInvokeExpr(newObject.makeRef(), args);
+		JInvokeStmt newStmt = new JInvokeStmt(newExpr);
+		newObjectChain.add(newStmt);
+		return newObjectChain;
+	}
+    
+    private Chain<Unit> methodInvocation(String localRefForInvoke,String invokedMethod,String parameter, String local, String method) {
+		Chain<Unit> methodInvocationChain = new PatchingChain<Unit>(new HashChain<Unit>());
+		List<Value> args = new ArrayList<Value>();
+                args.add(StringConstant.v(localRefForInvoke));
+                args.add(StringConstant.v(invokedMethod));
+                args.add(StringConstant.v(parameter));
+		args.add(StringConstant.v(local));
+		args.add(StringConstant.v(method));
+		JStaticInvokeExpr newExpr = new JStaticInvokeExpr(methodInvocation.makeRef(), args);
+		JInvokeStmt newStmt = new JInvokeStmt(newExpr);
+		methodInvocationChain.add(newStmt);
+		return methodInvocationChain;
+	}
+
 
     private Chain<Unit> identityStmt(String currMethod, String var, int lineNum) {
         System.out.println("Identity Statement Called : " + currMethod + "|" + var);
@@ -449,10 +542,12 @@ public class MethodIntInstra extends BodyTransformer
         return identityStmtChain;
     }
 
+    //private Chain<Unit> returnMethod(String className,String currentMethod, String retVar) {
     private Chain<Unit> returnMethod(String currentMethod, String retVar) {
         System.out.println("Return Statement called : " + retVar);
         Chain<Unit> returnChain = new PatchingChain<Unit>(new HashChain<Unit>());
         List<Value> args = new ArrayList<Value>();
+       // args.add(StringConstant.v(className));
         args.add(StringConstant.v(currentMethod));
         args.add(StringConstant.v(retVar));
         JStaticInvokeExpr newExpr = new JStaticInvokeExpr(returnMethod.makeRef(), args);

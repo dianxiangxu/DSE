@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class Utility {
     
-    public static String className = "Example34";  //2,12,6,6_A, 27,27_C,30_G,30_A
+    public static String className = "Example27_C";  //2,12,6,6_A, 27,27_C,30_G,30_A
     
     
     public static String neatbeansCompilationDir = "\\build\\classes\\artifacts\\"; 

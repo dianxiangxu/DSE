@@ -47,6 +47,7 @@ public class SootIntCollectorInstra {
         public static HashMap<Integer, ConditionStatement> conditionSaver = new HashMap<Integer, ConditionStatement>();
         public static HashMap<Integer, ConditionStatement> lineCounter = new HashMap<Integer, ConditionStatement>();
 	//public static HashMap<int,ConditionStatement> conditionSaver = new HashMap<int,ConditionStatement>();
+        public static Map<Object, String> arrayLengthMap = new IdentityHashMap<Object, String>();
 	
         public static void  resetAll()
         {
@@ -99,6 +100,7 @@ public class SootIntCollectorInstra {
                     System.out.println("Has array notation");
                     op1Prefix = op1.substring(0,op1.indexOf("["));
                     System.out.println(op1Prefix);
+                    System.out.println("Ln:"+op1Prefix.length());
                     op1Prefix = currentMethod+"_"+op1Prefix;
                     op1Infix = op1.substring(op1.indexOf("[")+1,op1.indexOf("]"));
                     System.out.println(op1Infix);
@@ -159,14 +161,72 @@ public class SootIntCollectorInstra {
 			localMap.put(lhsVar, "("+op1Val+op+op2Val+")");
 		}
                 if(DEBUG_ON){ 
-                    System.out.println("Map " + localMap);
-                    System.out.println("staticFieldMap:"+staticFieldMap);
-                    System.out.println("instanceFieldMap:"+instanceFieldMap);
+                    //System.out.println("Map " + localMap);
+                   // System.out.println("staticFieldMap:"+staticFieldMap);
+                    //System.out.println("instanceFieldMap:"+instanceFieldMap);
                     System.out.println("localMap:"+localMap);
                 } //
                 if(DEBUG_ON){ System.out.println("Collector :"+currentMethod+"-> updateLocal() End*******");}
 	}
 
+        public static void arrayLength(Object array, String local, String arrName,String method){
+		//if the array is not present in the map, assign a new symbolic value to its length and add it to the map
+		String keyName = "";
+                sequenceNo++;
+                currentMethod = method;
+		if(DEBUG_ON){
+                    System.out.println("FOUND ARRAY_LENGTH:seq"+sequenceNo);
+                    System.out.println("LENGTH OF:"+arrName+"| Local:"+local);
+                }
+                
+                //localMap.get(op1Prefix)
+                String op1Var = currentMethod+"_"+arrName;
+		if(localMap.containsKey(op1Var)){
+			keyName = localMap.get(op1Var);
+                        localMap.put(currentMethod+"_"+local, "LENGTH_OF_"+keyName);
+                        
+		} else {
+			//keyName ="LENGTHOF_"+String.valueOf(symbCount);
+			//symbCount++;
+			//arrayLengthMap.put(array, sizeVal);
+                        System.out.println("Found no reference for:"+arrName);
+		}
+		//System.out.println("arrayLength " + local + " = " + sizeVal);
+		//localMap.put(currentMethod+"_"+local, keyName);
+                System.out.println("localMap:"+localMap);
+	}
+        
+         public static void newObject(String className,String local ,String method){
+		//if the array is not present in the map, assign a new symbolic value to its length and add it to the map
+		String keyName = "";
+                sequenceNo++;
+                currentMethod = method;
+		if(DEBUG_ON){
+                    System.out.println("FOUND NEW_OBJECT:seq"+sequenceNo);
+                    System.out.println("New Object created OF:"+className+"| Local:"+local);
+                }
+               
+                localMap.put(currentMethod+"_"+local, "OBJECT_OF_"+className);
+                
+                System.out.println("localMap:"+localMap);
+	}
+         
+         
+         public static void methodInvocation(String localRefForInvoke,String invokedMethod,String parameter,String local ,String method){
+		//if the array is not present in the map, assign a new symbolic value to its length and add it to the map
+		String keyName = "";
+                sequenceNo++;
+                currentMethod = method;
+		if(DEBUG_ON){
+                    System.out.println("FOUND METHOD_INVOCATION:seq"+sequenceNo);
+                    System.out.println("Found:"+localRefForInvoke+"|method:"+invokedMethod+"|param:"+parameter+"| Local:"+local+"| Current method:"+currentMethod);
+                }
+               
+//                localMap.put(currentMethod+"_"+local, "OBJECT_OF_"+className);
+//                
+//                System.out.println("localMap:"+localMap);
+	}
+        
 	public static void assignLocal(String lhs, Object o, String field){
 		//System.out.println("aL," + lhs + ", " + ((o==null)? o : o.getClass()) + ", " + field);  6FEB
                 sequenceNo++;
@@ -298,10 +358,11 @@ public class SootIntCollectorInstra {
 	
 	public static void idenStmt(String currMethod, String var,int lineNo){
             sequenceNo++;
+            currentMethod = currMethod;
             if(DEBUG_ON){ 
             System.out.println("FOUND IDEN_STMT:seq"+sequenceNo+"Line:"+lineNo);
             System.out.println("Collector :"+currentMethod+"-> idenStmt() Start*******");}
-		currentMethod = currMethod;
+		
 		//create a new symbolic variable
 		String symbVal = "p"+ symbCount;
 		symbCount++;
